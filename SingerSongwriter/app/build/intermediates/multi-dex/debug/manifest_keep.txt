@@ -1,0 +1,19 @@
+-keep class com.mysampleapp.Application {
+    <init>();
+    void attachBaseContext(android.content.Context);
+}
+-keep class com.mysampleapp.SplashActivity { <init>(); }
+-keep class com.mysampleapp.SignInActivity { <init>(); }
+-keep class com.mysampleapp.MainActivity { <init>(); }
+-keep class com.facebook.FacebookActivity { <init>(); }
+-keep class com.amazonS3.TransferActivity { <init>(); }
+-keep class com.amazonS3.DownloadActivity { <init>(); }
+-keep class com.amazonS3.UploadActivity { <init>(); }
+-keep class com.amazonS3.DownloadSelectionActivity { <init>(); }
+-keep class com.amazonaws.mobileconnectors.s3.transferutility.TransferService { <init>(); }
+-keep public class * extends android.app.backup.BackupAgent {
+    <init>();
+}
+-keep public class * extends java.lang.annotation.Annotation {
+    *;
+}
