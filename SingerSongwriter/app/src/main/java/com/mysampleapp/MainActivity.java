@@ -26,6 +26,7 @@ import android.widget.ListView;
 import com.amazonS3.TransferActivity;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
+import com.musicUtil.PlayMusicSelect;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
@@ -145,6 +146,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        btn_record = (Button) findViewById(R.id.btn_record);                         // 녹음 기능 구현
+        btn_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_news = (Button) findViewById(R.id.btn_news);                        // 모아보기 기능 구현
+
+        btn_news.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent(MainActivity.this, PlayMusicSelect.class);
+                startActivityForResult(intent, 1);
+            }
+        });
 
 
 
