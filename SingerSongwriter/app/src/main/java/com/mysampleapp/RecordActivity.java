@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonS3.TransferActivity;
@@ -26,8 +28,10 @@ public class RecordActivity extends Activity {
 
     MediaPlayer player;
     MediaRecorder recorder;
+    CountDownTimer t;
 
     int playbackPosition = 0;
+    int cnt=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,31 @@ public class RecordActivity extends Activity {
         Button playBtn = (Button) findViewById(R.id.playBtn);
         Button playStopBtn = (Button) findViewById(R.id.playStopBtn);
         Button uploadBtn = (Button) findViewById(R.id.uploadBtn);
+        final TextView txtcount= (TextView) findViewById(R.id.countTextView);
+
+        t = new CountDownTimer( Long.MAX_VALUE , 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                cnt++;
+                String time = new Integer(cnt).toString();
+
+                long millis = cnt;
+                int seconds = (int) (millis / 60);
+                int minutes = seconds / 60;
+                seconds     = seconds % 60;
+
+                txtcount.setText(String.format("%d:%02d:%02d", minutes, seconds,millis));
+
+            }
+
+            @Override
+            public void onFinish() {
+                cnt=0;
+
+            }
+        };
 
 
 
@@ -61,6 +90,11 @@ public class RecordActivity extends Activity {
                             "녹음을 시작합니다.", Toast.LENGTH_LONG).show();
                     recorder.prepare();
                     recorder.start();
+
+                    t.cancel();
+                    t.onFinish();
+                    t.start();
+
                 }catch (Exception ex){
                     Log.e("SampleAudioRecorder", "Exception : ", ex);
                 }
@@ -76,6 +110,7 @@ public class RecordActivity extends Activity {
                 recorder.stop();
                 recorder.release();
                 recorder = null;
+                t.cancel();
 
                 Toast.makeText(getApplicationContext(),
                         "녹음이 중지되었습니다.", Toast.LENGTH_LONG).show();
