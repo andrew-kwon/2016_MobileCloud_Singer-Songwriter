@@ -264,4 +264,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    public static class UserNameClass
+    {
+        static String UserName;
+        static String FilePath;
+        public static void setFilePath(String path)
+        {
+            FilePath=path;
+        }
+        public static String getFilePath()
+        {
+            return FilePath;
+        }
+
+        public static void setUserName(String name)
+        {
+            UserName=name;
+        }
+        public static String getUserName()
+        {
+            return UserName;
+        }
+    }
+
+
+
 }

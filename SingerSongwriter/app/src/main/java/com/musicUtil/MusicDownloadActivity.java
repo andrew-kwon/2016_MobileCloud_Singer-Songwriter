@@ -1,4 +1,4 @@
-package com.amazonS3;
+package com.musicUtil;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -17,12 +17,14 @@ import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonS3.Constants;
+import com.amazonS3.DownloadSelectionActivity;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.musicUtil.MusicPlayerActivity;
+import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 import com.mysampleapp.Util;
 
@@ -35,8 +37,8 @@ import java.util.List;
  * DownloadActivity displays a list of download records and a bunch of buttons
  * for managing the downloads.
  */
-public class DownloadActivity extends ListActivity {
-    private static final String TAG = "DownloadActivity";
+public class MusicDownloadActivity extends ListActivity {
+    private static final String TAG = "MusicDownloadActivity";
 
     private static final int DOWNLOAD_SELECTION_REQUEST_CODE = 1;
 
@@ -72,12 +74,15 @@ public class DownloadActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download);
+        setContentView(R.layout.activity_music_download);
         // Initializes TransferUtility, always do this before using it.
         transferUtility = Util.getTransferUtility(this);
         checkedIndex = INDEX_NOT_CHECKED;
         transferRecordMaps = new ArrayList<HashMap<String, Object>>();
         initUI();
+
+//        Intent intent = new Intent(MusicDownloadActivity.this, PlayMusicSelect.class); //바로 플레이 리스트 생성
+//        startActivityForResult(intent, DOWNLOAD_SELECTION_REQUEST_CODE);
     }
 
     @Override
@@ -175,11 +180,11 @@ public class DownloadActivity extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 if (checkedIndex != pos) {
-                    transferRecordMaps.get(pos).put("checked", true);
+                    transferRecordMaps.get(pos).put("checked", true);                 //지금꺼 체크
                     if (checkedIndex >= 0) {
-                        transferRecordMaps.get(checkedIndex).put("checked", false);
+                        transferRecordMaps.get(checkedIndex).put("checked", false);     //전에꺼 체크해제
                     }
-                    checkedIndex = pos;
+                    checkedIndex = pos;                                                //현재로 바꿈
                     updateButtonAvailability();
                     simpleAdapter.notifyDataSetChanged();
                 }
@@ -193,8 +198,17 @@ public class DownloadActivity extends ListActivity {
         btnDelete = (Button) findViewById(R.id.buttonDelete);
         btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
         btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
-
         btnPlay = (Button) findViewById(R.id.buttonPlay);
+
+        // Launches an activity for the user to select an object in their S3
+        // bucket to download
+        btnDownload.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MusicDownloadActivity.this, PlayMusicSelect.class);
+                startActivityForResult(intent, DOWNLOAD_SELECTION_REQUEST_CODE);
+            }
+        });
         btnPlay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,12 +219,12 @@ public class DownloadActivity extends ListActivity {
                     String myData=nowData.toString();
                     String myDataSet[] = myData.split(",");
                     String fileNameSet[] = myDataSet[2].split("=");
-                    String fileName=fileNameSet[1];                                  // 현재 선택한  object 에서 file name 가져오기.
+                    String fileName=fileNameSet[1];
 
-                    Intent intent = new Intent(DownloadActivity.this, MusicPlayerActivity.class);
+                    Intent intent = new Intent(MusicDownloadActivity.this, MusicPlayerActivity.class);
                     intent.putExtra("pos",  fileName);
                     Toast.makeText(
-                            DownloadActivity.this,
+                            MusicDownloadActivity.this,
                             "pos : " +  fileName ,
                             Toast.LENGTH_SHORT).show();
                     startActivity(intent);
@@ -218,15 +232,6 @@ public class DownloadActivity extends ListActivity {
 
                 }
 
-            }
-        });
-        // Launches an activity for the user to select an object in their S3
-        // bucket to download
-        btnDownload.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DownloadActivity.this, DownloadSelectionActivity.class);
-                startActivityForResult(intent, DOWNLOAD_SELECTION_REQUEST_CODE);
             }
         });
 
@@ -238,6 +243,7 @@ public class DownloadActivity extends ListActivity {
                 if (checkedIndex >= 0 && checkedIndex < observers.size()) {
                     Boolean paused = transferUtility.pause(observers.get(checkedIndex)
                             .getId());
+
                     /**
                      * If paused does not return true, it is likely because the
                      * user is trying to pause a download that is not in a
@@ -246,7 +252,7 @@ public class DownloadActivity extends ListActivity {
                      */
                     if (!paused) {
                         Toast.makeText(
-                                DownloadActivity.this,
+                                MusicDownloadActivity.this,
                                 "Cannot Pause transfer.  You can only pause transfers in a WAITING or IN_PROGRESS state.",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -273,7 +279,7 @@ public class DownloadActivity extends ListActivity {
                      */
                     if (resumed == null) {
                         Toast.makeText(
-                                DownloadActivity.this,
+                                MusicDownloadActivity.this,
                                 "Cannot resume transfer.  You can only resume transfers in a PAUSED state.",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -293,7 +299,7 @@ public class DownloadActivity extends ListActivity {
                      */
                     if (!canceled) {
                         Toast.makeText(
-                                DownloadActivity.this,
+                                MusicDownloadActivity.this,
                                 "Cannot cancel transfer.  You can only resume transfers in a PAUSED, WAITING, or IN_PROGRESS state.",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -340,7 +346,11 @@ public class DownloadActivity extends ListActivity {
             if (resultCode == RESULT_OK) {
                 // Start downloading with the key they selected in the
                 // DownloadSelectionActivity screen.
-                String key = data.getStringExtra("key");
+                String key = data.getStringExtra("key");                     // DownloadSelection 에서 받아온 key값을 extra로 받아온다.
+//
+//                Toast.makeText(getApplicationContext(),
+//                        "key :  " + key , Toast.LENGTH_LONG).show();
+
                 beginDownload(key);
             }
         }
@@ -352,10 +362,11 @@ public class DownloadActivity extends ListActivity {
     private void beginDownload(String key) {
         // Location to download files from S3 to. You can choose any accessible
         // file.
-        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" + key);
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" + key);             // mobile device의 직접적으로 저장할 위치 받아옴
 
         // Initiate the download
-        TransferObserver observer = transferUtility.download(Constants.BUCKET_NAME, key, file);
+
+        TransferObserver observer = transferUtility.download(Constants.BUCKET_NAME, key, file);       // download 펑션 부르기
         /*
          * Note that usually we set the transfer listener after initializing the
          * transfer. However it isn't required in this sample app. The flow is
@@ -364,6 +375,21 @@ public class DownloadActivity extends ListActivity {
          * -> set listeners to in progress transfers.
          */
         // observer.setTransferListener(new DownloadListener());
+
+        MainActivity.UserNameClass.setFilePath(Environment.getExternalStorageDirectory().toString() + "/"+key);
+
+//
+//        Intent intent = new Intent(MusicDownloadActivity.this, MusicPlayerActivity.class);
+//        intent.putExtra("pos",MainActivity.UserNameClass.getFilePath() );
+//
+//        Toast.makeText(
+//                        MusicDownloadActivity.this,
+//                        "pos : " + MainActivity.UserNameClass.getFilePath() ,
+//                        Toast.LENGTH_SHORT).show();
+//
+//
+//        startActivity(intent);
+
     }
 
     /*

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
 import com.amazonaws.mobile.user.IdentityProvider;
+import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.DemoInstructionFragment;
@@ -162,6 +163,10 @@ public class NavigationDrawer {
 
         if (userName != null) {
             userNameView.setText(userName);
+
+            MainActivity.UserNameClass.setUserName(userName); //userName 받아오기
+
+
             userNameView.setBackgroundColor(
                     activity.getResources().getColor(R.color.nav_drawer_top_background));
         }

@@ -1,6 +1,8 @@
 package com.mysampleapp;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
@@ -10,10 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.amazonS3.TransferActivity;
 import com.amazonS3.UploadActivity;
+
+import java.io.File;
 
 
 public class RecordActivity extends Activity {
@@ -34,6 +39,8 @@ public class RecordActivity extends Activity {
         Button playBtn = (Button) findViewById(R.id.playBtn);
         Button playStopBtn = (Button) findViewById(R.id.playStopBtn);
         Button uploadBtn = (Button) findViewById(R.id.uploadBtn);
+
+
 
         recordBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -105,10 +112,49 @@ public class RecordActivity extends Activity {
         uploadBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecordActivity.this, UploadActivity.class);                     //바로 업로드 하는 기능
-                intent.putExtra("path",RECORDED_FILE);
-                startActivity(intent);
-                finish();
+                AlertDialog.Builder alert = new AlertDialog.Builder(RecordActivity.this);
+
+                alert.setTitle("곡 제목");
+                alert.setMessage("곡 제목을 입력하세요.");
+
+                String userName = MainActivity.UserNameClass.getUserName();
+                final String myUser =userName;
+
+                // Set an EditText view to get user input
+                final EditText input = new EditText(RecordActivity.this);
+                alert.setView(input);
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String value = input.getText().toString();
+                        value.toString();
+
+
+                        File filePre = new File("/sdcard/recorded.mp4");
+
+                        File fileNow = new File("/sdcard/" + myUser+"_"+value.toString() + ".mp4");
+
+                        filePre.renameTo(fileNow);    //이름바꾸기
+
+                        String Change_file = "/sdcard/" + myUser+"_"+value.toString() + ".mp4";   //경로설정
+
+
+                        Intent intent = new Intent(RecordActivity.this, UploadActivity.class);                     //바로 업로드 하는 기능
+                        intent.putExtra("path", Change_file);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+
+                alert.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Canceled.
+                            }
+                        });
+
+                alert.show();
             }
         });
 

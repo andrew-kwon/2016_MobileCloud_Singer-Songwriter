@@ -26,6 +26,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.LOCATION_HARDWARE" />
 
     <application
         android:name="com.mysampleapp.Application"
@@ -72,6 +74,12 @@
         <activity
             android:name="com.amazonS3.DownloadSelectionActivity"
             android:label="@string/download_selection_activity" />
+        <activity
+            android:name="com.musicUtil.MusicPlayerActivity"
+            android:label="MusicPlayerAct" />
+        <activity
+            android:name="com.musicUtil.PlayMusicSelect"
+            android:label="PlayMusicSelect" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
@@ -80,6 +88,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <activity android:name="com.mysampleapp.RecordActivity" >
+        </activity>
 
         <!-- END - FACEBOOK SIGN-IN -->
 

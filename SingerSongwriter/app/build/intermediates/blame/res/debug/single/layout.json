@@ -372,6 +372,10 @@
         "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\GithubCommit\\logins3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.0\\res\\layout\\abc_screen_simple.xml"
     },
     {
+        "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\res\\merged\\debug\\layout\\record_main.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\src\\main\\res\\layout\\record_main.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\MySampleApp\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_bar_title_item.xml",
         "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\MySampleApp\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.0\\res\\layout\\abc_action_bar_title_item.xml"
     },
@@ -520,6 +524,10 @@
         "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.0\\res\\layout\\abc_action_bar_title_item.xml"
     },
     {
+        "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_music_player.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\src\\main\\res\\layout\\activity_music_player.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\MySampleApp\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_media_action.xml",
         "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\MySampleApp\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.0\\res\\layout\\notification_media_action.xml"
     },
@@ -586,6 +594,10 @@
     {
         "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\GithubCommit\\logins3\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_media.xml",
         "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\GithubCommit\\logins3\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.0\\res\\layout\\notification_template_media.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_music.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\src\\main\\res\\layout\\activity_music.xml"
     },
     {
         "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\MySampleApp\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_download_selection.xml",
