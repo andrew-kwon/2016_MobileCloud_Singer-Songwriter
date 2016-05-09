@@ -81,7 +81,7 @@ public class MusicDownloadActivity extends ListActivity {
         transferRecordMaps = new ArrayList<HashMap<String, Object>>();
         File file = new File(Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter");
         if(!file.isDirectory()) file.mkdirs();
-
+        
         initUI();
 
     }

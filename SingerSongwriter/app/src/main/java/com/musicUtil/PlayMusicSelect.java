@@ -87,16 +87,22 @@ public class PlayMusicSelect extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
 
-                Intent intent = new Intent(PlayMusicSelect.this, MusicPlayerActivity.class);
-                intent.putExtra("pos", Environment.getExternalStorageDirectory().toString() + "/" +(String) transferRecordMaps.get(pos).get("key"));
-
-                Toast.makeText(
-                        PlayMusicSelect.this,
-                        "pos : " + Environment.getExternalStorageDirectory().toString() + "/" +(String) transferRecordMaps.get(pos).get("key") ,
-                        Toast.LENGTH_SHORT).show();
-
-                startActivity(intent);
+                Intent toDownLoad = new Intent();
+                toDownLoad.putExtra("key", (String) transferRecordMaps.get(pos).get("key"));
+                setResult(RESULT_OK, toDownLoad);
                 finish();
+//
+//                Intent intent = new Intent(PlayMusicSelect.this, MusicPlayerActivity.class);
+//                intent.putExtra("pos", Environment.getExternalStorageDirectory().toString() + "/" + (String) transferRecordMaps.get(pos).get("key"));
+//
+//                Toast.makeText(
+//                        PlayMusicSelect.this,
+//                        "pos : " + Environment.getExternalStorageDirectory().toString() + "/" +(String) transferRecordMaps.get(pos).get("key") ,
+//                        Toast.LENGTH_SHORT).show();
+
+
+//                startActivity(intent);
+
 
             }
         });

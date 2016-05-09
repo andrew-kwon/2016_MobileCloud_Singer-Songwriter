@@ -74,21 +74,33 @@
         <activity
             android:name="com.musicUtil.MusicPlayerActivity"
             android:label="MusicPlayerAct"/>
+        <activity
+            android:name="com.musicUtil.MusicDownloadActivity"
+            android:label="MusicPlayerAct"/>
 
         <activity
             android:name="com.musicUtil.PlayMusicSelect"
             android:label="PlayMusicSelect" />
+
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
+
+         <!-- END - FACEBOOK SIGN-IN -->
         <activity
             android:name="com.musicUtil.RecordActivity">
         </activity>
+        <activity
+            android:name="com.mysampleapp.sampleRegister">
+        </activity>
+        <activity
+            android:name="com.newspid.onlyDownloadActivity">
+        </activity>
 
-         <!-- END - FACEBOOK SIGN-IN -->
+
 
     </application>
 </manifest>

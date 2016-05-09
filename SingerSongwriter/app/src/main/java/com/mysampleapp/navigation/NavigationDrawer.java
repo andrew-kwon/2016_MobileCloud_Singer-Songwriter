@@ -117,8 +117,8 @@ public class NavigationDrawer {
 
         // Create the navigation drawer toggle helper.
         drawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar,
-                app_name, app_name) {
-
+            app_name, app_name) {
+		
             @Override
             public void syncState() {
                 super.syncState();
@@ -182,7 +182,7 @@ public class NavigationDrawer {
                 identityManager.getCurrentIdentityProvider();
 
         final ImageView imageView =
-                (ImageView)activity.findViewById(R.id.userImage);
+            (ImageView)activity.findViewById(R.id.userImage);
 
         if (identityProvider == null) {
             // Not signed in

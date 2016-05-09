@@ -56,4 +56,7 @@
         android:layout_gravity="center"
         android:text="업로드"
         android:background="#FFAA00"/>
+
+
+
 </LinearLayout>

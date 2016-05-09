@@ -25,14 +25,15 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.musicUtil.MusicDownloadActivity;
 import com.amazonS3.TransferActivity;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
-import com.musicUtil.PlayMusicSelect;
 import com.musicUtil.RecordActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
+import com.newspid.onlyDownloadActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /** Class name for log messages. */
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void handleIdentityID(String identityId) {
-                        MainActivity.UserIDClass.setUserID(identityId);
+                      MainActivity.UserIDClass.setUserID(identityId);
                     }
 
                     @Override
@@ -149,13 +150,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
 
 
+
         setContentView(R.layout.activity_main);
 
         setupToolbar(savedInstanceState);
 
         setupNavigationMenu(savedInstanceState);
 
-        btn_mypage = (Button) findViewById(R.id.btn_mypage);
+        btn_mypage = (Button) findViewById(R.id.btn_mypage);                          // 마이페이지 기능구현
 
         btn_mypage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,21 +181,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(MainActivity.this, PlayMusicSelect.class);
+                Intent intent = new Intent(MainActivity.this, MusicDownloadActivity.class);
                 startActivityForResult(intent, 1);
             }
         });
-
 
         btn_ranking= (Button) findViewById(R.id.btn_lanking);
         btn_ranking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 Toast.makeText(getApplicationContext(),
-                        "이름 : " + MainActivity.UserIDClass.getUserName() + "\nID : " + MainActivity.UserIDClass.getUserID(),
+                        "이름 : " + MainActivity.UserIDClass.getUserName() + "\nID : " + MainActivity.UserIDClass.getUserID()+"\n내용 : " + MainActivity.UserIDClass.getContents(),
                         Toast.LENGTH_LONG).show();
             }
         });
+        btn_meet= (Button) findViewById(R.id.btn_meet);
+        btn_meet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent(MainActivity.this, onlyDownloadActivity.class);
+                intent.putExtra("key", "Young-Hoon--Kwon_ㅎㅎㅎㅎ.mp4");
+                startActivity(intent);
+            }
+        });
+
 
 
     }
@@ -287,11 +298,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         static String UserName;
         static String UserID;
         static String UploadFilepath;
+        static String contents;
+        static String SongName;
         static Bitmap UserImage;
+
 
         public static void setUserName(String name)
         {
-            UserName=name;
+            UserName=name.replaceAll("\\s","-");
         }
         public static String getUserName()
         {
@@ -310,7 +324,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public static void setUserID(String ID) { UserID= ID;}
         public static String getUserID() {return UserID;}
 
-        public static void setUploadFilepath(String filepath) { UploadFilepath = filepath;}
+        public static void setContents(String content) { contents= content.replaceAll("\\s","　");;}
+        public static String getContents() {return contents;}
+
+        public static void setSongName(String songName) { SongName= songName.replaceAll("\\s","　");;}
+        public static String getSongName() {return SongName;}
+
+        public static void setUploadFilepath(String filepath) { UploadFilepath = filepath.replaceAll("\\s","-");;}
         public static String getUploadFilepath(){ return UploadFilepath;}
 
     }

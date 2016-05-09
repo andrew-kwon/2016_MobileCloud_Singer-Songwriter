@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -85,6 +86,9 @@ public class DownloadSelectionActivity extends ListActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 Intent intent = new Intent();
                 intent.putExtra("key", (String) transferRecordMaps.get(pos).get("key"));
+//                Toast.makeText(getApplicationContext(),
+//                        "key :  " + (String) transferRecordMaps.get(pos).get("key") , Toast.LENGTH_LONG).show();
+
                 setResult(RESULT_OK, intent);
                 finish();
             }

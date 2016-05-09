@@ -90,7 +90,20 @@ public class UploadActivity extends ListActivity {
         transferUtility = Util.getTransferUtility(this);
         checkedIndex = INDEX_NOT_CHECKED;
         transferRecordMaps = new ArrayList<HashMap<String, Object>>();
+
         initUI();
+        Intent intent = getIntent();
+        String filePath = intent.getStringExtra("path");
+        if(filePath !=null)
+        {
+            // UploadBoardActivity(UserIDClass.Username, userid, filepath);
+
+            Toast.makeText(getApplicationContext(), filePath, Toast.LENGTH_LONG).show();
+
+
+
+            beginUpload(filePath);
+        }
     }
 
     @Override

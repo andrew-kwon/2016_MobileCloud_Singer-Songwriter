@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
+import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
 public class IdentityDemoFragment extends DemoFragmentBase implements IdentityManager.SignInStateChangeListener {
@@ -42,7 +43,7 @@ public class IdentityDemoFragment extends DemoFragmentBase implements IdentityMa
         mFragmentView = inflater.inflate(R.layout.fragment_demo_identity, container, false);
         userNameTextView = (TextView) mFragmentView.findViewById(R.id.textView_demoIdentityUserName);
         userIdTextView = (TextView) mFragmentView.findViewById(R.id.textView_demoIdentityUserID);
-        userImageView = (ImageView)mFragmentView.findViewById(R.id.imageView_demoIdentityUserImage);
+        userImageView = (ImageView) mFragmentView.findViewById(R.id.imageView_demoIdentityUserImage);
 
         // Obtain a reference to the identity manager.
         identityManager = AWSMobileClient.defaultMobileClient()
@@ -86,6 +87,7 @@ public class IdentityDemoFragment extends DemoFragmentBase implements IdentityMa
                 if (identityManager.isUserSignedIn()) {
 
                     userNameTextView.setText(identityManager.getUserName());
+                    MainActivity.UserIDClass.setUserID(identityId);
 
                     if (identityManager.getUserImage() != null) {
                         userImageView.setImageBitmap(identityManager.getUserImage());

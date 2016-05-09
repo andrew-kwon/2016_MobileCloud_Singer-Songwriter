@@ -2,8 +2,10 @@ package com.musicUtil;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -22,10 +24,17 @@ import com.amazonS3.UploadActivity;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class RecordActivity extends Activity {
+
+    private static final String UPLOAD_URL = "http://52.207.214.66/singersong/songUpload.php";
+
     static final String RECORDED_FILE = Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter/recorded.mp4";
 
     MediaPlayer player;
@@ -147,7 +156,6 @@ public class RecordActivity extends Activity {
                 }
             }
         });
-
         uploadBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,8 +176,8 @@ public class RecordActivity extends Activity {
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
-                        value.toString();
 
+                        MainActivity.UserIDClass.setSongName(value.toString());
 
                         File filePre = new File(Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter/recorded.mp4");
 
@@ -180,12 +188,7 @@ public class RecordActivity extends Activity {
                         String Change_file = Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter/" + myUser+"_"+value.toString() + ".mp4";   //경로설정
 
                         MainActivity.UserIDClass.setUploadFilepath(Change_file);                                  //올릴 페스 글로벌로 저장.
-
-
-                        Intent intent = new Intent(RecordActivity.this, UploadActivity.class);                     //바로 업로드 하는 기능
-                        intent.putExtra("path", Change_file);
-                        startActivity(intent);
-                        finish();
+                        setText();
 
                     }
                 });
@@ -205,6 +208,100 @@ public class RecordActivity extends Activity {
         });
 
     }
+    private void uploadSongDB() {                                                                   // DB에 곡 정보 등록하는 기능
+
+        String userName=MainActivity.UserIDClass.getUserName();
+        String userID=MainActivity.UserIDClass.getUserID();
+        String songName=MainActivity.UserIDClass.getSongName();
+        String contents=MainActivity.UserIDClass.getContents();
+        String filepath=MainActivity.UserIDClass.getUploadFilepath();
+
+        String urlSuffix = "?username="+userName+"&userID="+userID+"&songName="+songName+"&contents="
+                +contents+"&filepath="+filepath;
+
+        class RegisterUser extends AsyncTask<String, Void, String>{
+
+            ProgressDialog loading;
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(RecordActivity.this, "Please Wait",null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                if(s.equals("successfully Upload")) {
+                    Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(RecordActivity.this, UploadActivity.class);                     //바로 업로드 하는 기능
+                    intent.putExtra("path", MainActivity.UserIDClass.getUploadFilepath());
+                    startActivity(intent);
+                    finish();
+
+                }
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+                String s = params[0];
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(UPLOAD_URL+s);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String result;
+
+                    result = bufferedReader.readLine();
+
+                    return result;
+                }catch(Exception e){
+                    return null;
+                }
+            }
+        }
+
+        RegisterUser ru = new RegisterUser();
+        ru.execute(urlSuffix);
+    }
+
+
+    public void setText()                                                          /////// 설명 추가하는 알람창
+    {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(RecordActivity.this);
+
+        alert.setTitle("내용");
+        alert.setMessage("간단한 설명을 입력하세요.");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(RecordActivity.this);
+        alert.setView(input);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                MainActivity.UserIDClass.setContents(value.toString());
+
+                uploadSongDB();
+
+            }
+        });
+
+
+        alert.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+
+        alert.show();
+
+    }
+
     private void playAudio(String url) throws Exception{
         killMediaPlayer();
 
