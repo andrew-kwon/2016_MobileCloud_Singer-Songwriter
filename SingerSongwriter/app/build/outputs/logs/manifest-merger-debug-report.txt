@@ -148,10 +148,10 @@ ADDED from C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\
 		ADDED from C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\src\main\AndroidManifest.xml:86:66-105
 	android:name
 		ADDED from C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\src\main\AndroidManifest.xml:86:20-65
-activity#com.mysampleapp.RecordActivity
+activity#com.musicUtil.RecordActivity
 ADDED from C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\src\main\AndroidManifest.xml:87:9-89:20
 	android:name
-		ADDED from C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\src\main\AndroidManifest.xml:88:13-43
+		ADDED from C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\src\main\AndroidManifest.xml:88:13-56
 uses-sdk
 INJECTED from C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:multidex:1.0.1] C:\Users\Administrator\Desktop\mobileAWS\Github\SingerSongwriter\app\build\intermediates\exploded-aar\com.android.support\multidex\1.0.1\AndroidManifest.xml:18:5-42

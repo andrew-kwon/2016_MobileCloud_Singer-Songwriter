@@ -79,10 +79,11 @@ public class MusicDownloadActivity extends ListActivity {
         transferUtility = Util.getTransferUtility(this);
         checkedIndex = INDEX_NOT_CHECKED;
         transferRecordMaps = new ArrayList<HashMap<String, Object>>();
+        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter");
+        if(!file.isDirectory()) file.mkdirs();
+
         initUI();
 
-//        Intent intent = new Intent(MusicDownloadActivity.this, PlayMusicSelect.class); //바로 플레이 리스트 생성
-//        startActivityForResult(intent, DOWNLOAD_SELECTION_REQUEST_CODE);
     }
 
     @Override
@@ -209,6 +210,7 @@ public class MusicDownloadActivity extends ListActivity {
                 startActivityForResult(intent, DOWNLOAD_SELECTION_REQUEST_CODE);
             }
         });
+
         btnPlay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,6 +236,7 @@ public class MusicDownloadActivity extends ListActivity {
 
             }
         });
+
 
         btnPause.setOnClickListener(new OnClickListener() {
             @Override
@@ -362,7 +365,11 @@ public class MusicDownloadActivity extends ListActivity {
     private void beginDownload(String key) {
         // Location to download files from S3 to. You can choose any accessible
         // file.
-        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" + key);             // mobile device의 직접적으로 저장할 위치 받아옴
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + key);             // mobile device의 직접적으로 저장할 위치 받아옴
+
+        Toast.makeText(getApplicationContext(),
+                Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + key, Toast.LENGTH_LONG).show();
+
 
         // Initiate the download
 
@@ -375,20 +382,6 @@ public class MusicDownloadActivity extends ListActivity {
          * -> set listeners to in progress transfers.
          */
         // observer.setTransferListener(new DownloadListener());
-
-        MainActivity.UserNameClass.setFilePath(Environment.getExternalStorageDirectory().toString() + "/"+key);
-
-//
-//        Intent intent = new Intent(MusicDownloadActivity.this, MusicPlayerActivity.class);
-//        intent.putExtra("pos",MainActivity.UserNameClass.getFilePath() );
-//
-//        Toast.makeText(
-//                        MusicDownloadActivity.this,
-//                        "pos : " + MainActivity.UserNameClass.getFilePath() ,
-//                        Toast.LENGTH_SHORT).show();
-//
-//
-//        startActivity(intent);
 
     }
 

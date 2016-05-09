@@ -448,6 +448,10 @@
         "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\exploded-aar\\com.facebook.android\\facebook-android-sdk\\4.6.0\\res\\layout\\messenger_button_send_white_large.xml"
     },
     {
+        "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_music_download.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\src\\main\\res\\layout\\activity_music_download.xml"
+    },
+    {
         "merged": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\res\\merged\\debug\\layout\\select_dialog_multichoice_material.xml",
         "source": "C:\\Users\\Administrator\\Desktop\\mobileAWS\\Github\\SingerSongwriter\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\23.1.0\\res\\layout\\select_dialog_multichoice_material.xml"
     },

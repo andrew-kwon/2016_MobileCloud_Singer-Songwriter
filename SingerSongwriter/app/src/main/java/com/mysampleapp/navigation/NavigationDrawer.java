@@ -112,10 +112,13 @@ public class NavigationDrawer {
         this.drawerLayout = layout;
         this.fragmentContainerId = fragmentContainerId;
 
+//        MainActivity.UserNameClass.setUserName(activity.getString(R.string.main_nav_menu_default_user_text)); //userName 받아오기
+
+
         // Create the navigation drawer toggle helper.
         drawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar,
-            app_name, app_name) {
-		
+                app_name, app_name) {
+
             @Override
             public void syncState() {
                 super.syncState();
@@ -154,6 +157,7 @@ public class NavigationDrawer {
         if (identityProvider == null) {
             // Not signed in
             userNameView.setText(activity.getString(R.string.main_nav_menu_default_user_text));
+
             userNameView.setBackgroundColor(activity.getResources().getColor(R.color.nav_drawer_no_user_background));
             return;
         }
@@ -163,9 +167,7 @@ public class NavigationDrawer {
 
         if (userName != null) {
             userNameView.setText(userName);
-
-            MainActivity.UserNameClass.setUserName(userName); //userName 받아오기
-
+            MainActivity.UserIDClass.setUserName(userName); //userName 받아오기
 
             userNameView.setBackgroundColor(
                     activity.getResources().getColor(R.color.nav_drawer_top_background));
@@ -180,7 +182,7 @@ public class NavigationDrawer {
                 identityManager.getCurrentIdentityProvider();
 
         final ImageView imageView =
-            (ImageView)activity.findViewById(R.id.userImage);
+                (ImageView)activity.findViewById(R.id.userImage);
 
         if (identityProvider == null) {
             // Not signed in
@@ -197,6 +199,9 @@ public class NavigationDrawer {
         final Bitmap userImage = identityManager.getUserImage();
         if (userImage != null) {
             imageView.setImageBitmap(userImage);
+
+            MainActivity.UserIDClass.setUserImage(userImage);
+
         }
     }
 

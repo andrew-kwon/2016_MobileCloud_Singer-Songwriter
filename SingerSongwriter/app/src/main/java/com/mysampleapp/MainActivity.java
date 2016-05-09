@@ -9,6 +9,7 @@
 package com.mysampleapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,11 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.amazonS3.TransferActivity;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
 import com.musicUtil.PlayMusicSelect;
+import com.musicUtil.RecordActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn_news;
     private Button btn_mypage;
     private Button btn_record;
-    private Button btn_lanking;
+    private Button btn_ranking;
     private Button btn_meet;
     /**
      * Initializes the Toolbar for use with the activity.
@@ -130,6 +133,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Obtain a reference to the identity manager.
         identityManager = awsMobileClient.getIdentityManager();
 
+        AWSMobileClient.defaultMobileClient()
+                .getIdentityManager()
+                .getUserID(new IdentityManager.IdentityHandler() {
+
+                    @Override
+                    public void handleIdentityID(String identityId) {
+                        MainActivity.UserIDClass.setUserID(identityId);
+                    }
+
+                    @Override
+                    public void handleError(Exception exception) {
+
+                    }
+                });
+
+
         setContentView(R.layout.activity_main);
 
         setupToolbar(savedInstanceState);
@@ -166,15 +185,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-
-
-
-
-
-
-
-
-
+        btn_ranking= (Button) findViewById(R.id.btn_lanking);
+        btn_ranking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Toast.makeText(getApplicationContext(),
+                        "이름 : " + MainActivity.UserIDClass.getUserName() + "\nID : " + MainActivity.UserIDClass.getUserID(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
 
 
     }
@@ -263,19 +282,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onBackPressed();
     }
 
-
-    public static class UserNameClass
+    public static class UserIDClass
     {
         static String UserName;
-        static String FilePath;
-        public static void setFilePath(String path)
-        {
-            FilePath=path;
-        }
-        public static String getFilePath()
-        {
-            return FilePath;
-        }
+        static String UserID;
+        static String UploadFilepath;
+        static Bitmap UserImage;
 
         public static void setUserName(String name)
         {
@@ -285,8 +297,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             return UserName;
         }
+
+        public static void setUserImage(Bitmap image)
+        {
+            UserImage=image;
+        }
+        public static Bitmap getUserImage()
+        {
+            return UserImage;
+        }
+
+        public static void setUserID(String ID) { UserID= ID;}
+        public static String getUserID() {return UserID;}
+
+        public static void setUploadFilepath(String filepath) { UploadFilepath = filepath;}
+        public static String getUploadFilepath(){ return UploadFilepath;}
+
     }
-
-
 
 }

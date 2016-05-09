@@ -1,4 +1,4 @@
-package com.mysampleapp;
+package com.musicUtil;
 
 
 import android.app.AlertDialog;
@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,14 +18,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonS3.TransferActivity;
 import com.amazonS3.UploadActivity;
+import com.mysampleapp.MainActivity;
+import com.mysampleapp.R;
 
 import java.io.File;
 
 
 public class RecordActivity extends Activity {
-    static final String RECORDED_FILE = "/sdcard/recorded.mp4";
+    static final String RECORDED_FILE = Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter/recorded.mp4";
 
     MediaPlayer player;
     MediaRecorder recorder;
@@ -44,6 +46,9 @@ public class RecordActivity extends Activity {
         Button playStopBtn = (Button) findViewById(R.id.playStopBtn);
         Button uploadBtn = (Button) findViewById(R.id.uploadBtn);
         final TextView txtcount= (TextView) findViewById(R.id.countTextView);
+
+        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter");
+        if(!file.isDirectory()) file.mkdirs();
 
         t = new CountDownTimer( Long.MAX_VALUE , 1000) {
 
@@ -70,7 +75,6 @@ public class RecordActivity extends Activity {
         };
 
 
-
         recordBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -83,7 +87,7 @@ public class RecordActivity extends Activity {
                 recorder = new MediaRecorder();
                 recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
                 recorder.setOutputFile(RECORDED_FILE);
                 try{
                     Toast.makeText(getApplicationContext(),
@@ -127,7 +131,7 @@ public class RecordActivity extends Activity {
                 try{
                     playAudio(RECORDED_FILE);
 
-                    Toast.makeText(getApplicationContext(), "음악파일 재생 시작됨.", 2000).show();
+                    Toast.makeText(getApplicationContext(), "음악파일 재생 시작됨.", Toast.LENGTH_SHORT).show();
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -139,7 +143,7 @@ public class RecordActivity extends Activity {
                 if(player != null){
                     playbackPosition = player.getCurrentPosition();
                     player.pause();
-                    Toast.makeText(getApplicationContext(), "음악 파일 재생 중지됨.",2000).show();
+                    Toast.makeText(getApplicationContext(), "음악 파일 재생 중지됨.",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -147,12 +151,14 @@ public class RecordActivity extends Activity {
         uploadBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 AlertDialog.Builder alert = new AlertDialog.Builder(RecordActivity.this);
 
                 alert.setTitle("곡 제목");
                 alert.setMessage("곡 제목을 입력하세요.");
+                String userName = MainActivity.UserIDClass.getUserName();
 
-                String userName = MainActivity.UserNameClass.getUserName();
                 final String myUser =userName;
 
                 // Set an EditText view to get user input
@@ -165,19 +171,22 @@ public class RecordActivity extends Activity {
                         value.toString();
 
 
-                        File filePre = new File("/sdcard/recorded.mp4");
+                        File filePre = new File(Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter/recorded.mp4");
 
-                        File fileNow = new File("/sdcard/" + myUser+"_"+value.toString() + ".mp4");
+                        File fileNow = new File(Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter/" + myUser+"_"+value.toString() + ".mp4");
 
                         filePre.renameTo(fileNow);    //이름바꾸기
 
-                        String Change_file = "/sdcard/" + myUser+"_"+value.toString() + ".mp4";   //경로설정
+                        String Change_file = Environment.getExternalStorageDirectory().getPath()+"/SingerSongwriter/" + myUser+"_"+value.toString() + ".mp4";   //경로설정
+
+                        MainActivity.UserIDClass.setUploadFilepath(Change_file);                                  //올릴 페스 글로벌로 저장.
 
 
                         Intent intent = new Intent(RecordActivity.this, UploadActivity.class);                     //바로 업로드 하는 기능
                         intent.putExtra("path", Change_file);
                         startActivity(intent);
                         finish();
+
                     }
                 });
 
@@ -190,6 +199,8 @@ public class RecordActivity extends Activity {
                         });
 
                 alert.show();
+
+
             }
         });
 
