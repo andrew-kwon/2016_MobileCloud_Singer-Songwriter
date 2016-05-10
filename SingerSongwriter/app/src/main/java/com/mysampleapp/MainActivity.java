@@ -33,6 +33,7 @@ import com.musicUtil.RecordActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
+import com.newspid.SongListViewActivity;
 import com.newspid.onlyDownloadActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -181,8 +182,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(MainActivity.this, MusicDownloadActivity.class);
+//                Intent intent = new Intent(MainActivity.this, MusicDownloadActivity.class);
+                Intent intent = new Intent(MainActivity.this,SongListViewActivity.class);
+
                 startActivityForResult(intent, 1);
+
             }
         });
 
@@ -199,9 +203,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_meet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(MainActivity.this, onlyDownloadActivity.class);
-                intent.putExtra("key", "Young-Hoon--Kwon_ㅎㅎㅎㅎ.mp4");
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, onlyDownloadActivity.class)
+//                intent.putExtra("key", "Young-Hoon--Kwon_ㅎㅎㅎㅎ.mp4");
+//                startActivity(intent);;
             }
         });
 

@@ -38,20 +38,15 @@ import java.util.List;
  * for managing the downloads.
  */
 public class onlyDownloadActivity extends ListActivity {
-    private static final String TAG = "MusicDownloadActivity";
+    private static final String TAG = "onlyDownloadActivity";
 
     private static final int DOWNLOAD_SELECTION_REQUEST_CODE = 1;
 
     // Indicates no row element has beens selected
     private static final int INDEX_NOT_CHECKED = -1;
+    private static int start=1;
 
-    private Button btnDownload;
-    private Button btnPause;
-    private Button btnResume;
-    private Button btnCancel;
     private Button btnDelete;
-    private Button btnPauseAll;
-    private Button btnCancelAll;
     private Button btnPlay;
 
     // This is the main class for interacting with the Transfer Manager
@@ -70,7 +65,7 @@ public class onlyDownloadActivity extends ListActivity {
      */
     private ArrayList<HashMap<String, Object>> transferRecordMaps;
     private int checkedIndex;
-    String fileName;
+    String getFileName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,12 +79,21 @@ public class onlyDownloadActivity extends ListActivity {
 
 
         Intent intent = getIntent();
-        fileName= intent.getStringExtra("key");
+        getFileName= intent.getStringExtra("key");
 
         initUI();
+        downloadGetFile();
 
     }
 
+    public void downloadGetFile()
+    {
+        if(start==1){
+            beginDownload(getFileName);
+            initData();
+        }
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -196,25 +200,12 @@ public class onlyDownloadActivity extends ListActivity {
             }
         });
 
-        btnDownload = (Button) findViewById(R.id.buttonDownload);
-        btnPause = (Button) findViewById(R.id.buttonPause);
-        btnResume = (Button) findViewById(R.id.buttonResume);
-        btnCancel = (Button) findViewById(R.id.buttonCancel);
         btnDelete = (Button) findViewById(R.id.buttonDelete);
-        btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
-        btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
         btnPlay = (Button) findViewById(R.id.buttonPlay);
 
         // Launches an activity for the user to select an object in their S3
         // bucket to download
 
-        btnPause.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                beginDownload(fileName);
-            }
-        });
         btnPlay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -308,9 +299,6 @@ public class onlyDownloadActivity extends ListActivity {
      */
     private void updateButtonAvailability() {
         boolean availability = checkedIndex >= 0;
-        btnPause.setEnabled(availability);
-        btnResume.setEnabled(availability);
-        btnCancel.setEnabled(availability);
         btnDelete.setEnabled(availability);
     }
 
