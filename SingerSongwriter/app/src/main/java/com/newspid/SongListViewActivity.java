@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.DialogPreference;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
 import org.apache.http.HttpEntity;
@@ -36,6 +38,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,6 +57,7 @@ public class SongListViewActivity extends Activity {
     String contents[];
     String listUsername[];
     String listSongname[];
+    String listUserID[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +76,11 @@ public class SongListViewActivity extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
         listView.setAdapter(adapter);
-        String split="spspsplit";
-        String[] songListArray =songList.split(split);             // 전체 테이블 받아옴.
+        String[] songListArray =songList.split("--:--");             // 전체 테이블 받아옴.
 
         listSongname = new String[songListArray.length];
         listUsername  = new String[songListArray.length];
+        listUserID = new String[songListArray.length];
         selectFilepath = new String[songListArray.length];
         contents = new String[songListArray.length];
 
@@ -87,9 +91,10 @@ public class SongListViewActivity extends Activity {
             listArray=songListArray[k].split(":::");
 
             listUsername[k]=listArray[1];
-            listSongname[k]=listArray[2];
-            contents[k]=listArray[3];
-            selectFilepath[k]=listArray[4];
+            listUserID[k]=listArray[2];
+            listSongname[k]=listArray[3];
+            contents[k]=listArray[4];
+            selectFilepath[k]=listArray[5];
 
             adapter.add(listUsername[k]+" <SongName : "+listSongname[k]+" >");
 
@@ -107,14 +112,15 @@ public class SongListViewActivity extends Activity {
 //                Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
                 final String getString = item;
 
-                final CharSequence[] items ={"다운받기","좋아요","댓글달기","댓글보기","취소"};
+                final CharSequence[] items = {"다운받기", "좋아요", "댓글달기", "댓글보기", "취소"};
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(SongListViewActivity.this);
 
                 final String UserName = listUsername[position];
                 final String SongName = listSongname[position];
+                final String UserID = listUserID[position];
 
-                alert.setTitle(SongName + " : "+contents[position])
+                alert.setTitle(SongName + " : " + contents[position])
                         .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
                             public void onClick(DialogInterface dialog, int index) {
 //
@@ -132,9 +138,37 @@ public class SongListViewActivity extends Activity {
 
                                 } else if (index == 2) {                                                             //댓글달기
                                     // 새로운 db 접속해서 댓글달기  alert창 새로 띄워서 edittext 작성후 string 전송
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(SongListViewActivity.this);
+
+                                    alert.setTitle("댓글 달기");
+
+                                    final EditText input = new EditText(SongListViewActivity.this);
+                                    alert.setView(input);
+
+                                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                                            String comment = input.getText().toString();
+                                            String myName = MainActivity.UserIDClass.getUserName();
+                                            addDBComent(myName, comment, SongName, UserID);
+
+                                        }
+                                    });
+
+                                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            // Canceled.
+                                        }
+                                    });
+
+                                    alert.show();
+
 
                                 } else if (index == 3) {                                                           //댓글보기
                                     // dbContents intent 해서 보여주기. 여기서는 userName,userID, songName 일치하는 댓글 보여주기 ........... 만약 곡 이름이 같다면 업로드 못하게 설정.
+
+                                    showComment(UserID, SongName);
+
 
                                 } else if (index == 4) {                                                            //취소
                                     // 아무것도 하지 않음
@@ -215,11 +249,22 @@ public class SongListViewActivity extends Activity {
 
     }
 
+    private void addDBComent(String myName, String comment, String SongName, String UserID)
+    {
+        comment=comment.replaceAll("\\s","　");
+        CommentDBclass myCommentDB= new CommentDBclass();
+        myCommentDB.sendComment(getApplicationContext(),myName, comment, SongName, UserID);
 
-    class SongContents{
-        private String userName;
-        private String songName;
-        private String contents;
-        private String filepath;
+
     }
+    private void showComment(String UserID, String SongName)
+    {
+        Intent intent = new Intent(SongListViewActivity.this,ShowCommentActivity.class);
+        intent.putExtra("SongName", SongName);
+        intent.putExtra("UserID", UserID);
+        startActivityForResult(intent, 1);
+
+//        startActivity(intent);
+    }
+
 }
