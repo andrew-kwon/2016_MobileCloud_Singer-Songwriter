@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.amazonS3.TransferActivity;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
@@ -36,7 +37,15 @@ public class ShowCommentActivity extends Activity {
     static String SongName;
     String listContents[];
     String listUserName[];
+    private Button addComment;
 
+    @Override
+    public void onBackPressed()
+    {
+        Intent backtoComment = new Intent();
+        setResult(RESULT_OK, backtoComment);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,34 @@ public class ShowCommentActivity extends Activity {
         Intent intent = getIntent();
         UserID = intent.getStringExtra("UserID");
         SongName = intent.getStringExtra("SongName");
+
+        addComment= (Button) findViewById(R.id.addComment);                          // 마이페이지 기능구현
+
+        addComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(ShowCommentActivity.this);
+                alert.setTitle("댓글 달기");
+                final EditText input = new EditText(ShowCommentActivity.this);
+                alert.setView(input);
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                           String comment = input.getText().toString();
+                           String myName = MainActivity.UserIDClass.getUserName();
+                           comment=comment.replaceAll("\\s","　");
+                           CommentDBclass myCommentDB= new CommentDBclass();
+                           myCommentDB.sendComment(getApplicationContext(),myName, comment, SongName, UserID);
+                           showComment(UserID,SongName);
+                           }
+                 });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                }      });
+                alert.show();
+            }
+        });
 
         showComment(UserID,SongName);
 

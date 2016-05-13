@@ -58,6 +58,7 @@ public class SongListViewActivity extends Activity {
     String listUsername[];
     String listSongname[];
     String listUserID[];
+    int commentCount[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class SongListViewActivity extends Activity {
 
         setContentView(R.layout.activity_songlistview);
 
-        login("1", "1");
+        setList();
     }
 
 
@@ -83,6 +84,7 @@ public class SongListViewActivity extends Activity {
         listUserID = new String[songListArray.length];
         selectFilepath = new String[songListArray.length];
         contents = new String[songListArray.length];
+        commentCount = new int[songListArray.length];
 
         for(int k=0; k<songListArray.length; k++){                // 테이블 별로 구분해서 split 짜르기.
 
@@ -95,6 +97,7 @@ public class SongListViewActivity extends Activity {
             listSongname[k]=listArray[3];
             contents[k]=listArray[4];
             selectFilepath[k]=listArray[5];
+            commentCount[k]=Integer.parseInt(listArray[6]);
 
             adapter.add(listUsername[k]+" <SongName : "+listSongname[k]+" >");
 
@@ -112,13 +115,13 @@ public class SongListViewActivity extends Activity {
 //                Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
                 final String getString = item;
 
-                final CharSequence[] items = {"다운받기", "좋아요", "댓글달기", "댓글보기", "취소"};
-
                 AlertDialog.Builder alert = new AlertDialog.Builder(SongListViewActivity.this);
 
                 final String UserName = listUsername[position];
                 final String SongName = listSongname[position];
                 final String UserID = listUserID[position];
+                final int commentCounts = commentCount[position];
+                final CharSequence[] items = {"다운받기", "좋아요", "댓글보기" + "(" + commentCounts + ")", "취소"};
 
                 alert.setTitle(SongName + " : " + contents[position])
                         .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
@@ -136,41 +139,13 @@ public class SongListViewActivity extends Activity {
                                 } else if (index == 1) {                                                              //좋아요
                                     // db 접속후 count 올리기 ---> 한사람이 하나밖에 못올리게 설정 !! 중요
 
-                                } else if (index == 2) {                                                             //댓글달기
-                                    // 새로운 db 접속해서 댓글달기  alert창 새로 띄워서 edittext 작성후 string 전송
-                                    AlertDialog.Builder alert = new AlertDialog.Builder(SongListViewActivity.this);
-
-                                    alert.setTitle("댓글 달기");
-
-                                    final EditText input = new EditText(SongListViewActivity.this);
-                                    alert.setView(input);
-
-                                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-
-                                            String comment = input.getText().toString();
-                                            String myName = MainActivity.UserIDClass.getUserName();
-                                            addDBComent(myName, comment, SongName, UserID);
-
-                                        }
-                                    });
-
-                                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            // Canceled.
-                                        }
-                                    });
-
-                                    alert.show();
-
-
-                                } else if (index == 3) {                                                           //댓글보기
+                                } else if (index == 2) {                                                           //댓글보기
                                     // dbContents intent 해서 보여주기. 여기서는 userName,userID, songName 일치하는 댓글 보여주기 ........... 만약 곡 이름이 같다면 업로드 못하게 설정.
 
                                     showComment(UserID, SongName);
 
 
-                                } else if (index == 4) {                                                            //취소
+                                } else if (index == 3) {                                                            //취소
                                     // 아무것도 하지 않음
 
                                 }
@@ -183,7 +158,7 @@ public class SongListViewActivity extends Activity {
         });
     }
 
-    private void login(final String username, String password) {
+    private void setList() {
 
         class LoginAsync extends AsyncTask<String, Void, String>{
 
@@ -245,26 +220,24 @@ public class SongListViewActivity extends Activity {
         }
 
         LoginAsync la = new LoginAsync();
-        la.execute(username, password);
+        la.execute();
 
     }
 
-    private void addDBComent(String myName, String comment, String SongName, String UserID)
-    {
-        comment=comment.replaceAll("\\s","　");
-        CommentDBclass myCommentDB= new CommentDBclass();
-        myCommentDB.sendComment(getApplicationContext(),myName, comment, SongName, UserID);
-
-
-    }
     private void showComment(String UserID, String SongName)
     {
         Intent intent = new Intent(SongListViewActivity.this,ShowCommentActivity.class);
         intent.putExtra("SongName", SongName);
         intent.putExtra("UserID", UserID);
         startActivityForResult(intent, 1);
+    }
 
-//        startActivity(intent);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+
+            setList();
+        }
     }
 
 }
