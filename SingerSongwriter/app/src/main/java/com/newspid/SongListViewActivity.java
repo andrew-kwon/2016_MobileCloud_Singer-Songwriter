@@ -59,6 +59,7 @@ public class SongListViewActivity extends Activity {
     String listSongname[];
     String listUserID[];
     int commentCount[];
+    int likeCount[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class SongListViewActivity extends Activity {
         selectFilepath = new String[songListArray.length];
         contents = new String[songListArray.length];
         commentCount = new int[songListArray.length];
+        likeCount = new int[songListArray.length];
 
         for(int k=0; k<songListArray.length; k++){                // 테이블 별로 구분해서 split 짜르기.
 
@@ -98,6 +100,7 @@ public class SongListViewActivity extends Activity {
             contents[k]=listArray[4];
             selectFilepath[k]=listArray[5];
             commentCount[k]=Integer.parseInt(listArray[6]);
+            likeCount[k]=Integer.parseInt(listArray[7]);
 
             adapter.add(listUsername[k]+" <SongName : "+listSongname[k]+" >");
 
@@ -121,7 +124,8 @@ public class SongListViewActivity extends Activity {
                 final String SongName = listSongname[position];
                 final String UserID = listUserID[position];
                 final int commentCounts = commentCount[position];
-                final CharSequence[] items = {"다운받기", "좋아요", "댓글보기" + "(" + commentCounts + ")", "취소"};
+                final int likeCounts = likeCount[position];
+                final CharSequence[] items = {"다운받기", "좋아요"+" ("+likeCounts+")", "댓글보기" + " (" + commentCounts + ")", "취소"};
 
                 alert.setTitle(SongName + " : " + contents[position])
                         .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
@@ -137,7 +141,13 @@ public class SongListViewActivity extends Activity {
                                     startActivity(intent);
 
                                 } else if (index == 1) {                                                              //좋아요
+
                                     // db 접속후 count 올리기 ---> 한사람이 하나밖에 못올리게 설정 !! 중요
+                                    UploadDatabaseManager myLikeDB = new UploadDatabaseManager();
+                                    myLikeDB.upLikeCount(getApplicationContext(), SongName, UserID);
+
+//                                    if(MainActivity.UserIDClass.getLikeTrue()) setList(); // 좋아요 성공하면 최신화
+                                    setList();
 
                                 } else if (index == 2) {                                                           //댓글보기
                                     // dbContents intent 해서 보여주기. 여기서는 userName,userID, songName 일치하는 댓글 보여주기 ........... 만약 곡 이름이 같다면 업로드 못하게 설정.
@@ -223,6 +233,7 @@ public class SongListViewActivity extends Activity {
         la.execute();
 
     }
+
 
     private void showComment(String UserID, String SongName)
     {

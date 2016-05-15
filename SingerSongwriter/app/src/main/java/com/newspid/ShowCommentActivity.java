@@ -7,20 +7,14 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.amazonS3.TransferActivity;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
@@ -71,7 +65,7 @@ public class ShowCommentActivity extends Activity {
                            String comment = input.getText().toString();
                            String myName = MainActivity.UserIDClass.getUserName();
                            comment=comment.replaceAll("\\s","　");
-                           CommentDBclass myCommentDB= new CommentDBclass();
+                           UploadDatabaseManager myCommentDB= new UploadDatabaseManager();
                            myCommentDB.sendComment(getApplicationContext(),myName, comment, SongName, UserID);
                            showComment(UserID,SongName);
                            }
