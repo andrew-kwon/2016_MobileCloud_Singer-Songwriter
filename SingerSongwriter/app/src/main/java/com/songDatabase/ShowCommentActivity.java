@@ -1,4 +1,4 @@
-package com.newspid;
+package com.songDatabase;
 
 
 import android.app.Activity;

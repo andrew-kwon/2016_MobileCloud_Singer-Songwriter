@@ -1,4 +1,4 @@
-package com.newspid;
+package com.songDatabase;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,46 +8,32 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.DialogPreference;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class SongListViewActivity extends Activity {
+public class RankingViewActivity extends Activity {
 
     private EditText editTextUserName;
     private EditText editTextPassword;
@@ -101,11 +87,14 @@ public class SongListViewActivity extends Activity {
             selectFilepath[k]=listArray[5];
             commentCount[k]=Integer.parseInt(listArray[6]);
             likeCount[k]=Integer.parseInt(listArray[7]);
-
-            adapter.add(listUsername[k]+" <SongName : "+listSongname[k]+" >");
-
-
         }
+
+
+//        adapter.add(listUsername[k]+" <SongName : "+listSongname[k]+" >");
+
+
+
+
 
         // 아이템을 [클릭]시의 이벤트 리스너를 등록
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -118,7 +107,7 @@ public class SongListViewActivity extends Activity {
 //                Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
                 final String getString = item;
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(SongListViewActivity.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(RankingViewActivity.this);
 
                 final String UserName = listUsername[position];
                 final String SongName = listSongname[position];
@@ -136,7 +125,7 @@ public class SongListViewActivity extends Activity {
 //                            String UserName = getString.split(" <SongName : ")[0];
 //                            String fileName = getString.split("<SongName : ")[1].split(" >")[0];
 
-                                    Intent intent = new Intent(SongListViewActivity.this, onlyDownloadActivity.class);
+                                    Intent intent = new Intent(RankingViewActivity.this, onlyDownloadActivity.class);
                                     intent.putExtra("key", UserName + "_" + SongName + ".mp4");
                                     startActivity(intent);
 
@@ -177,7 +166,7 @@ public class SongListViewActivity extends Activity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loadingDialog = ProgressDialog.show(SongListViewActivity.this, "Please wait", "Loading...");
+                loadingDialog = ProgressDialog.show(RankingViewActivity.this, "Please wait", "Loading...");
             }
 
             @Override
@@ -237,7 +226,7 @@ public class SongListViewActivity extends Activity {
 
     private void showComment(String UserID, String SongName)
     {
-        Intent intent = new Intent(SongListViewActivity.this,ShowCommentActivity.class);
+        Intent intent = new Intent(RankingViewActivity.this,ShowCommentActivity.class);
         intent.putExtra("SongName", SongName);
         intent.putExtra("UserID", UserID);
         startActivityForResult(intent, 1);

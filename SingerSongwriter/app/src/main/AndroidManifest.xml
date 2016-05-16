@@ -97,13 +97,16 @@
             android:name="com.mysampleapp.sampleRegister">
         </activity>
         <activity
-            android:name="com.newspid.onlyDownloadActivity">
+            android:name="com.songDatabase.onlyDownloadActivity">
         </activity>
         <activity
-            android:name="com.newspid.SongListViewActivity">
+            android:name="com.songDatabase.SongListViewActivity">
         </activity>
         <activity
-            android:name="com.newspid.ShowCommentActivity">
+            android:name="com.songDatabase.ShowCommentActivity">
+        </activity>
+        <activity
+            android:name="com.songDatabase.RankingViewActivity">
         </activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

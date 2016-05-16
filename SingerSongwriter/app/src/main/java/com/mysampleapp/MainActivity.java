@@ -23,9 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.musicUtil.MusicDownloadActivity;
 import com.amazonS3.TransferActivity;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
@@ -33,8 +31,8 @@ import com.musicUtil.RecordActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
-import com.newspid.SongListViewActivity;
-import com.newspid.onlyDownloadActivity;
+import com.songDatabase.RankingViewActivity;
+import com.songDatabase.SongListViewActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /** Class name for log messages. */
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View arg0) {
 //                Intent intent = new Intent(MainActivity.this, MusicDownloadActivity.class);
                 Intent intent = new Intent(MainActivity.this,SongListViewActivity.class);
-
+                intent.putExtra("ranking", "FALSE");
                 startActivityForResult(intent, 1);
 
             }
@@ -194,9 +192,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_ranking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Toast.makeText(getApplicationContext(),
-                        "이름 : " + MainActivity.UserIDClass.getUserName() + "\nID : " + MainActivity.UserIDClass.getUserID()+"\n내용 : " + MainActivity.UserIDClass.getContents(),
-                        Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(MainActivity.this,SongListViewActivity.class);
+                intent.putExtra("ranking", "TRUE");
+                startActivityForResult(intent, 1);
+
             }
         });
         btn_meet= (Button) findViewById(R.id.btn_meet);
