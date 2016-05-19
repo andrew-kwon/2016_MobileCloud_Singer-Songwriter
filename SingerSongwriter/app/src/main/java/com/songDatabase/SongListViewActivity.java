@@ -139,10 +139,10 @@ public class SongListViewActivity extends Activity  {
         if(rankingFunction)    // 좋아요 카운트를 소팅하면서 나머지 다른 것들도같이 소팅함  모든걸 다 비교하려면 시간이 오래걸리는데?
         {
             Arrays.sort(songDBs);
-            int kcount;
-            if(songListArray.length<7) kcount=songListArray.length;
-            else kcount=7;
-            for (int k = 0; k <kcount; k++) {
+            int kCount;
+            if(songListArray.length-1<7) kCount=songListArray.length-1;
+            else kCount=7;
+            for (int k = 0; k <kCount; k++) {
                 listUsername[k]=songDBs[k].username;
                 listUserID[k]=songDBs[k].userid;
                 listSongname[k]=songDBs[k].songname;

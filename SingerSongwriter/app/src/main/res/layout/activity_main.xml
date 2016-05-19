@@ -82,6 +82,15 @@
                 android:layout_alignStart="@+id/btn_record"
                 android:layout_marginLeft="41dp"
                 android:layout_marginStart="41dp" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/testBitmap"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/btn_lanking"
+                android:layout_alignStart="@+id/btn_lanking"
+                android:layout_marginTop="45dp" />
         </RelativeLayout>
 
     </LinearLayout>

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,6 +13,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +27,7 @@ import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -96,8 +99,11 @@ public class RecordActivity extends Activity {
                 recorder = new MediaRecorder();
                 recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                 recorder.setOutputFile(RECORDED_FILE);
+                recorder.setAudioSamplingRate(44100);
+                recorder.setAudioEncodingBitRate(96000);
+
                 try {
                     Toast.makeText(getApplicationContext(),
                             "녹음을 시작합니다.", Toast.LENGTH_LONG).show();
@@ -215,7 +221,8 @@ public class RecordActivity extends Activity {
         String songName=MainActivity.UserIDClass.getSongName();
         String contents=MainActivity.UserIDClass.getContents();
         String filepath=MainActivity.UserIDClass.getUploadFilepath();
-
+        Bitmap userImage=MainActivity.UserIDClass.getUserImage();
+        String userImageString=BitMapToString(userImage);
         String urlSuffix = "?username="+userName+"&userID="+userID+"&songName="+songName+"&contents="
                 +contents+"&filepath="+filepath;
 
@@ -344,4 +351,17 @@ public class RecordActivity extends Activity {
         super.onPause();
 
     }
+    public String BitMapToString(Bitmap bitmap){
+
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,10, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+/*
+byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+ */
+        return temp;
+    }
+
 }

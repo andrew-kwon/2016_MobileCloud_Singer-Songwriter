@@ -8,9 +8,16 @@
 //
 package com.mysampleapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,19 +26,51 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.amazonS3.TransferActivity;
+import com.amazonS3.UploadActivity;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
+import com.amazonaws.services.s3.model.MultipartUpload;
 import com.musicUtil.RecordActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
 import com.songDatabase.SongListViewActivity;
+import com.songDatabase.UploadImage;
+import com.squareup.picasso.Picasso;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /** Class name for log messages. */
@@ -59,6 +98,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn_record;
     private Button btn_ranking;
     private Button btn_meet;
+
+    String ba1;
+    static String UPLOAD_URL="http://52.207.214.66/singersong/userIDupload.php";
+    static String UPLOAD_IMAGE = "http://52.207.214.66/singersong/uploadImage.php";
     /**
      * Initializes the Toolbar for use with the activity.
      */
@@ -132,13 +175,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Obtain a reference to the identity manager.
         identityManager = awsMobileClient.getIdentityManager();
 
+
         AWSMobileClient.defaultMobileClient()
                 .getIdentityManager()
                 .getUserID(new IdentityManager.IdentityHandler() {
 
                     @Override
                     public void handleIdentityID(String identityId) {
-                      MainActivity.UserIDClass.setUserID(identityId);
+                        MainActivity.UserIDClass.setUserID(identityId);
+                        uploadUserImagetoServer(MainActivity.UserIDClass.getUserID(), MainActivity.UserIDClass.getUserImage());
+                        // 업로드 미리 했는지 체크 후, 체크 되어있으면 안올리고 안되어있으면 올린다.
                     }
 
                     @Override
@@ -146,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 });
+
 
 
 
@@ -202,16 +249,105 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_meet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-//                Intent intent = new Intent(MainActivity.this, onlyDownloadActivity.class)
-//                intent.putExtra("key", "Young-Hoon--Kwon_ㅎㅎㅎㅎ.mp4");
-//                startActivity(intent);;
+//
+//                Bitmap myBit = MainActivity.UserIDClass.getUserImage();
+//                String myBitString = BitMapToString(myBit);
+//                Toast.makeText(getApplicationContext(), "" + myBitString.length(), Toast.LENGTH_LONG).show();
+//
+//                Bitmap convertBit = Base64ToBitmap(myBitString);
+//                ImageView testBitmap = (ImageView) findViewById(R.id.testBitmap);
+////                testBitmap.setImageBitmap(convertBit);
+//
+////                Picasso.with(getApplicationContext())
+////                        .load("https://res.cloudinary.com/eightcruz/image/upload/c_lfill,h_32,w_32/qb0mjgu78t3hqjnztfr4")
+////                        .into(testBitmap);
+
+
             }
         });
 
 
 
+
     }
 
+
+
+    Bitmap Base64ToBitmap(String myImageData)
+    {
+        byte[] imageAsBytes = Base64.decode(myImageData.getBytes(), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+
+        return temp;
+    }
+
+    public void uploadUserImagetoServer(String userID,final Bitmap userImage)
+    {
+        String urlSuffix = "?userID="+userID+"&userImageName="+userImage.toString();
+
+        class RegisterUser extends AsyncTask<String, Void, String> {
+
+            ProgressDialog loading;
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+//                loading.dismiss();
+                if(s.equals("successfully Upload")) {
+
+                    Log.e("path", "----------------" );
+
+                    // Image
+                    Bitmap bm =MainActivity.UserIDClass.getUserImage();
+                    ba1 = BitMapToString(bm);
+                    Log.e("base64", "-----" + ba1);
+
+                    // Upload image to server
+                    new uploadToServer().execute();
+                }
+                else{
+
+                }
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+                String s = params[0];
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(UPLOAD_URL+s);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String result;
+
+                    result = bufferedReader.readLine();
+
+                    return result;
+                }catch(Exception e){
+                    return null;
+                }
+            }
+        }
+
+        RegisterUser ru = new RegisterUser();
+        ru.execute(urlSuffix);
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -294,6 +430,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         super.onBackPressed();
+    }
+
+
+    public class uploadToServer extends AsyncTask<Void, Void, String> {
+
+        private ProgressDialog pd = new ProgressDialog(MainActivity.this);
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.setMessage("Wait image uploading!");
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("base64", ba1));
+            nameValuePairs.add(new BasicNameValuePair("ImageName", MainActivity.UserIDClass.getUserID() + ".jpg"));
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(UPLOAD_IMAGE);
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httppost);
+                String st = EntityUtils.toString(response.getEntity());
+                Log.v("log_tag", "In the try Loop" + st);
+
+            } catch (Exception e) {
+                Log.v("log_tag", "Error in http connection " + e.toString());
+            }
+            return "Success";
+
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            pd.hide();
+            pd.dismiss();
+        }
     }
 
     public static class UserIDClass
