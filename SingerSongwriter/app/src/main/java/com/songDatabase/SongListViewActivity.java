@@ -52,6 +52,7 @@ public class SongListViewActivity extends Activity  {
     int commentCount[];
     int likeCount[];
     boolean rankingFunction=false;
+    songDB songDBs[];
 
     List<songData> rowItems;
 
@@ -109,7 +110,7 @@ public class SongListViewActivity extends Activity  {
         contents = new String[songListArray.length];
         commentCount = new int[songListArray.length];
         likeCount = new int[songListArray.length];
-        songDB songDBs[] = new songDB[songListArray.length];
+        songDBs = new songDB[songListArray.length-1]; // bound 조절.
 
 
         for (int k = 0; k < songListArray.length - 1; k++) {
@@ -128,7 +129,7 @@ public class SongListViewActivity extends Activity  {
             songData item = new songData(listSongname[k], contents[k], listUsername[k],
                     "" + likeCount[k], myBit);
             if(!rankingFunction) rowItems.add(item);
-            if(rankingFunction)
+            else
             {
                 songDBs[k]=new songDB( listUsername[k],listUserID[k],listSongname[k],
                         contents[k], commentCount[k], likeCount[k]);
@@ -141,7 +142,7 @@ public class SongListViewActivity extends Activity  {
             int kcount;
             if(songListArray.length<7) kcount=songListArray.length;
             else kcount=7;
-            for (int k = 0; k < kcount; k++) {                // 테이블 별로 구분해서 split 짜르기.
+            for (int k = 0; k <kcount; k++) {
                 listUsername[k]=songDBs[k].username;
                 listUserID[k]=songDBs[k].userid;
                 listSongname[k]=songDBs[k].songname;

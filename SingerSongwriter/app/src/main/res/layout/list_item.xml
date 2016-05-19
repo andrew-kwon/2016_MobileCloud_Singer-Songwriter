@@ -49,13 +49,24 @@
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="9sp" />
         <TextView
+            android:id="@+id/liketext"
+            android:layout_alignParentTop="true"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/userName"
+            android:text="Like: "
+            android:textColor="#0000FF"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="7sp" />
+        <TextView
             android:id="@+id/likeCount"
             android:layout_alignParentTop="true"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/userName"
-            android:text="COUNT"
+            android:layout_marginLeft="0dp"
+            android:layout_toRightOf="@+id/liketext"
+            android:text="1111"
             android:textColor="#0000FF"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="12sp" />
