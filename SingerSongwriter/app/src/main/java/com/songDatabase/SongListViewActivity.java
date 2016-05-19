@@ -6,16 +6,18 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.RecyclerUtil.RecyclerItemClickListener;
+import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
 import org.apache.http.HttpEntity;
@@ -31,10 +33,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
-public class SongListViewActivity extends Activity {
+public class SongListViewActivity extends Activity  {
 
     private EditText editTextUserName;
     private EditText editTextPassword;
@@ -49,6 +53,13 @@ public class SongListViewActivity extends Activity {
     int likeCount[];
     boolean rankingFunction=false;
 
+    List<songData> rowItems;
+
+    RecyclerAdapter adapter;
+    RecyclerView recyclerView;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,21 +71,39 @@ public class SongListViewActivity extends Activity {
         String ranking = intent.getStringExtra("ranking");
         if(ranking.equals("TRUE")) rankingFunction=true;
         else rankingFunction=false;
+
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         setList();
+
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                alertShow(position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                // ...
+            }
+        }));
+        // 아이템을 [클릭]시의 이벤트 리스너를 등록
+
+
     }
 
 
-    public void setListView(String songList)
-    {
+    public void setListView(String songList) {
 
-        ListView listView = (ListView) findViewById(R.id.listView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-
-        listView.setAdapter(adapter);
-        String[] songListArray =songList.split("--:--");             // 전체 테이블 받아옴.
+        rowItems = new ArrayList<songData>();
+        String[] songListArray = songList.split("--:--");             // 전체 테이블 받아옴.
 
         listSongname = new String[songListArray.length];
-        listUsername  = new String[songListArray.length];
+        listUsername = new String[songListArray.length];
         listUserID = new String[songListArray.length];
         selectFilepath = new String[songListArray.length];
         contents = new String[songListArray.length];
@@ -82,28 +111,28 @@ public class SongListViewActivity extends Activity {
         likeCount = new int[songListArray.length];
         songDB songDBs[] = new songDB[songListArray.length];
 
-        for(int k=0; k<songListArray.length; k++){                // 테이블 별로 구분해서 split 짜르기.
 
-
+        for (int k = 0; k < songListArray.length - 1; k++) {
             String listArray[];
-            listArray=songListArray[k].split(":::");
+            listArray = songListArray[k].split(":::");
 
-            listUsername[k]=listArray[1];
-            listUserID[k]=listArray[2];
-            listSongname[k]=listArray[3];
-            contents[k]=listArray[4];
-            selectFilepath[k]=listArray[5];
-            commentCount[k]=Integer.parseInt(listArray[6]);
-            likeCount[k]=Integer.parseInt(listArray[7]);
+            listUsername[k] = listArray[1];
+            listUserID[k] = listArray[2];
+            listSongname[k] = listArray[3];
+            contents[k] = listArray[4];
+            selectFilepath[k] = listArray[5];
+            commentCount[k] = Integer.parseInt(listArray[6]);
+            likeCount[k] = Integer.parseInt(listArray[7]);
+            Bitmap myBit = MainActivity.UserIDClass.getUserImage();                        /// db에서 받아와야 함.
 
-            if(!rankingFunction)adapter.add(listUsername[k]+" <SongName : "+listSongname[k]+" >");
+            songData item = new songData(listSongname[k], contents[k], listUsername[k],
+                    "" + likeCount[k], myBit);
+            if(!rankingFunction) rowItems.add(item);
             if(rankingFunction)
             {
                 songDBs[k]=new songDB( listUsername[k],listUserID[k],listSongname[k],
-                contents[k], commentCount[k], likeCount[k]);
+                        contents[k], commentCount[k], likeCount[k]);
             }
-
-
         }
 
         if(rankingFunction)    // 좋아요 카운트를 소팅하면서 나머지 다른 것들도같이 소팅함  모든걸 다 비교하려면 시간이 오래걸리는데?
@@ -119,71 +148,52 @@ public class SongListViewActivity extends Activity {
                 contents[k]=songDBs[k].comment;
                 commentCount[k]=songDBs[k].commentcount;
                 likeCount[k]=songDBs[k].likecount;
-                adapter.add(listUsername[k]+" < "+listSongname[k]+" > "+"("+likeCount[k]+")");
+                Bitmap myBit = MainActivity.UserIDClass.getUserImage();
+                songData item = new songData(listSongname[k], contents[k], listUsername[k],
+                        "" + likeCount[k], myBit);
+                rowItems.add(item);
             }
         }
 
-            // 아이템을 [클릭]시의 이벤트 리스너를 등록
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter = new RecyclerAdapter(this, rowItems);
+        recyclerView.setAdapter(adapter);
 
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    ListView listView = (ListView) parent;
-                    String item = (String) listView.getItemAtPosition(position);
-//                Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
-                    final String getString = item;
-
-                    AlertDialog.Builder alert = new AlertDialog.Builder(SongListViewActivity.this);
-
-                    final String UserName = listUsername[position];
-                    final String SongName = listSongname[position];
-                    final String UserID = listUserID[position];
-                    final int commentCounts = commentCount[position];
-                    final int likeCounts = likeCount[position];
-                    final CharSequence[] items = {"다운받기", "좋아요" + " (" + likeCounts + ")", "댓글보기" + " (" + commentCounts + ")", "취소"};
-
-                    alert.setTitle(SongName + " : " + contents[position])
-                            .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
-                                public void onClick(DialogInterface dialog, int index) {
-//
-                                    if (index == 0) {                                                                    //다운받기
-                                        // intent onlyDownload ( 파일페스, item.filepath 잡아서 보내기 )
-//                            String UserName = getString.split(" <SongName : ")[0];
-//                            String fileName = getString.split("<SongName : ")[1].split(" >")[0];
-
-                                        Intent intent = new Intent(SongListViewActivity.this, onlyDownloadActivity.class);
-                                        intent.putExtra("key", UserName + "_" + SongName + ".mp4");
-                                        startActivity(intent);
-
-                                    } else if (index == 1) {                                                              //좋아요
-
-                                        // db 접속후 count 올리기 ---> 한사람이 하나밖에 못올리게 설정 !! 중요
-                                        UploadDatabaseManager myLikeDB = new UploadDatabaseManager();
-                                        myLikeDB.upLikeCount(getApplicationContext(), SongName, UserID);
-
-//                                    if(MainActivity.UserIDClass.getLikeTrue()) setList(); // 좋아요 성공하면 최신화
-                                        setList();
-
-                                    } else if (index == 2) {                                                           //댓글보기
-                                        // dbContents intent 해서 보여주기. 여기서는 userName,userID, songName 일치하는 댓글 보여주기 ........... 만약 곡 이름이 같다면 업로드 못하게 설정.
-
-                                        showComment(UserID, SongName);
-
-
-                                    } else if (index == 3) {                                                            //취소
-                                        // 아무것도 하지 않음
-
-                                    }
-
-                                }
-                            });
-                alert.show();
-
-            }
-        });
     }
 
+    public void alertShow(int position){
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(SongListViewActivity.this);
+
+        final String UserName = listUsername[position];
+        final String SongName = listSongname[position];
+        final String UserID = listUserID[position];
+        final int commentCounts = commentCount[position];
+        final int likeCounts = likeCount[position];
+        final CharSequence[] items = {"다운받기", "좋아요" + " (" + likeCounts + ")", "댓글보기" + " (" + commentCounts + ")", "취소"};
+
+        alert.setTitle(SongName + " : " + contents[position])
+                .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
+                    public void onClick(DialogInterface dialog, int index) {
+                        if (index == 0) {
+                            Intent intent = new Intent(SongListViewActivity.this, onlyDownloadActivity.class);
+                            intent.putExtra("key", UserName + "_" + SongName + ".mp4");
+                            startActivity(intent);
+                        } else if (index == 1) {                                                              //좋아요
+                            UploadDatabaseManager myLikeDB = new UploadDatabaseManager();
+                            myLikeDB.upLikeCount(getApplicationContext(), SongName, UserID);
+//                                    if(MainActivity.UserIDClass.getLikeTrue()) setList(); // 좋아요 성공하면 최신화
+                            setList();
+
+                        } else if (index == 2) {                                                           //댓글보기
+                            // dbContents intent 해서 보여주기. 여기서는 userName,userID, songName 일치하는 댓글 보여주기 ........... 만약 곡 이름이 같다면 업로드 못하게 설정.
+                                    showComment(UserID, SongName);
+                                } else if (index == 3) {                                                            //취소
+                                    // 아무것도 하지 않음
+                                }
+                    }});
+        alert.show();
+
+    }
     private void setList() {
 
         class LoginAsync extends AsyncTask<String, Void, String>{
@@ -232,12 +242,12 @@ public class SongListViewActivity extends Activity {
 
             @Override
             protected void onPostExecute(String result){
-                String s = result.trim();
+               String s = result.trim();
                 loadingDialog.dismiss();
                 if(s.charAt(0)==':'){
 
                     // add set list view
-                    setListView(s);
+                    setListView(result);
 
                 }else {
                     Toast.makeText(getApplicationContext(), "Invalid User Name or Password", Toast.LENGTH_LONG).show();

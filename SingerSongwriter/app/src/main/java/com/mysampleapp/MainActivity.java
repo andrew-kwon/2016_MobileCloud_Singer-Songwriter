@@ -31,7 +31,6 @@ import com.musicUtil.RecordActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
-import com.songDatabase.RankingViewActivity;
 import com.songDatabase.SongListViewActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -305,16 +304,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         static String contents;
         static String SongName;
         static Bitmap UserImage;
-        static boolean likeTrue=true;
-
-        public static void setLikeTrue(boolean check)
-        {
-            likeTrue=check;
-        }
-        public static boolean getLikeTrue()
-        {
-            return likeTrue;
-        }
 
 
         public static void setUserName(String name)
