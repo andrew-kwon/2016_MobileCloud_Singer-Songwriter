@@ -10,7 +10,7 @@
 		}else{
 			
 
-		$con=mysqli_connect("####","####","####","####") or die("접속불가");
+		$con = mysqli_connect(HOST,USER,PASS,DB) or die("접속불가");
 
 			#require_once('dbConnect.php');
 			#$sql = "SELECT * FROM users WHERE username='$username' ";
@@ -24,8 +24,7 @@
 		if(mysqli_query($con,$sql)){
 			echo 'Successed comment!';
 		mysqli_close($con);
-		$con2 = mysqli_connect("####","####","####","####") or die("singer 접속불가");
-		$sql2 ="UPDATE songDB set commentCount = (commentCount +1) where SongName ='$SongName' AND UserID ='$UserID'";
+		$con = mysqli_connect(HOST,USER,PASS,DB) or die("접속불가");		$sql2 ="UPDATE songDB set commentCount = (commentCount +1) where SongName ='$SongName' AND UserID ='$UserID'";
 			if(mysqli_query($con2,$sql2)) {echo 'succesed count up!';
 				mysqli_close($con2);
 			}

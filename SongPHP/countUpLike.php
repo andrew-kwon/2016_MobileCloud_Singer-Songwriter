@@ -6,7 +6,7 @@
 
 			
 
-	$con=mysqli_connect("####","####","####","####") or die("접속불가");
+	$con = mysqli_connect(HOST,USER,PASS,DB) or die("접속불가");
 
 	$sql = "SELECT * FROM songLike WHERE SongName='$SongName' AND UserID='$UserID' AND likeUserID ='$myUserID' ";
 			
@@ -20,7 +20,7 @@
 		if(mysqli_query($con,$sql)){
 			echo 'Success';
 		mysqli_close($con);
-		$con2 = mysqli_connect("####","####","####","####") or die("singer 접속불가");
+		$con2 = mysqli_connect(HOST,USER,PASS,DB) or die("접속불가");
 		$sql2 ="UPDATE songDB set likeCount = (likeCount +1) where SongName ='$SongName' AND UserID ='$UserID'";
 			if(mysqli_query($con2,$sql2)) {echo 'Success';
 				mysqli_close($con2);

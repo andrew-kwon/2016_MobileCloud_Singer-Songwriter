@@ -6,16 +6,15 @@
 		$songName = $_GET['songName'];
 		$contents = $_GET['contents'];
 		$filepath=$_GET['filepath'];
-		
+#		$profilePic = $_GET['profile'];		
 		if($username == '' ){
 			echo 'please fill all values';
 		}else{
 			
 
-		$con=mysqli_connect("####","####","####","####") or die("접속불가");
+		$con=mysqli_connect("") or die("접속불가");
 
-			#require_once('dbConnect.php');
-			$sql = "SELECT * FROM songDB WHERE userID='$userID' AND songName='$songName'";
+					$sql = "SELECT * FROM songDB WHERE userID='$userID' AND songName='$songName'";
 			
 			$check = mysqli_fetch_array(mysqli_query($con,$sql));
 			

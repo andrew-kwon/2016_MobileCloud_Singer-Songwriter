@@ -3,7 +3,7 @@
 	$UserID=$_GET['UserID'];
 	$SongName=$_GET['SongName'];
 
-	$con= mysqli_connect("####","####","####","####");
+	$con = mysqli_connect(HOST,USER,PASS,DB);
 	
 	$sql = "SELECT * FROM comments WHERE UserID ='$UserID' AND SongName='$SongName' ";
 	$number=1;
