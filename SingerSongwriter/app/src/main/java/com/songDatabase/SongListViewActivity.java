@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.RecyclerUtil.RecyclerItemClickListener;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,11 +31,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +50,11 @@ public class SongListViewActivity extends Activity  {
     private EditText editTextPassword;
     public static final String USER_NAME = "USERNAME";
 
+    static Context mycontect;
+    public static Context getContext()
+    {
+        return mycontect;
+    }
     String selectFilepath[];
     String contents[];
     String listUsername[];
@@ -58,6 +69,7 @@ public class SongListViewActivity extends Activity  {
 
     RecyclerAdapter adapter;
     RecyclerView recyclerView;
+    static String myPicUrl="http://http://52.207.214.66/singersong/data/";
 
 
 
@@ -66,7 +78,7 @@ public class SongListViewActivity extends Activity  {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_songlistview);
-
+        mycontect=getApplication();
 
         Intent intent = getIntent();
         String ranking = intent.getStringExtra("ranking");
@@ -124,10 +136,12 @@ public class SongListViewActivity extends Activity  {
             selectFilepath[k] = listArray[5];
             commentCount[k] = Integer.parseInt(listArray[6]);
             likeCount[k] = Integer.parseInt(listArray[7]);
-            Bitmap myBit = MainActivity.UserIDClass.getUserImage();                        /// db에서 받아와야 함.
 
+
+//            String myPicture=myPicUrl+listArray[2]+".jpg";
+//            Bitmap myBit =getImageFromURL(myPicture);
             songData item = new songData(listSongname[k], contents[k], listUsername[k],
-                    "" + likeCount[k], myBit);
+                    "" + likeCount[k],listUserID[k], null);
             if(!rankingFunction) rowItems.add(item);
             else
             {
@@ -149,9 +163,10 @@ public class SongListViewActivity extends Activity  {
                 contents[k]=songDBs[k].comment;
                 commentCount[k]=songDBs[k].commentcount;
                 likeCount[k]=songDBs[k].likecount;
-                Bitmap myBit = MainActivity.UserIDClass.getUserImage();
+//                String myPicture=myPicUrl+songDBs[k].userid+".jpg";
+//                Bitmap myBit =getImageFromURL(myPicture);
                 songData item = new songData(listSongname[k], contents[k], listUsername[k],
-                        "" + likeCount[k], myBit);
+                        "" + likeCount[k],listUserID[k],null);
                 rowItems.add(item);
             }
         }
@@ -160,6 +175,36 @@ public class SongListViewActivity extends Activity  {
         recyclerView.setAdapter(adapter);
 
     }
+
+    public static Bitmap getImageFromURL(String imageURL){
+        Bitmap imgBitmap = null;
+        HttpURLConnection conn = null;
+        BufferedInputStream bis = null;
+
+        try
+        {
+            URL url = new URL(imageURL);
+            conn = (HttpURLConnection)url.openConnection();
+            conn.connect();
+
+            int nSize = conn.getContentLength();
+            bis = new BufferedInputStream(conn.getInputStream(), nSize);
+            imgBitmap = BitmapFactory.decodeStream(bis);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        } finally{
+            if(bis != null) {
+                try {bis.close();} catch (IOException e) {}
+            }
+            if(conn != null ) {
+                conn.disconnect();
+            }
+        }
+
+        return imgBitmap;
+    }
+
 
     public void alertShow(int position){
 

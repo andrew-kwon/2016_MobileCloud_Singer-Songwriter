@@ -1,23 +1,28 @@
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <TextView
+        android:layout_marginTop="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:text="- 음악재생 플레이어 -"/>
+        android:text="Song Name"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:id="@+id/songNameText"/>
 
     <SeekBar
         android:id="@+id/playbar"
+        android:layout_marginTop="30dp"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:max="60000"
         android:padding="10dp"
-        android:progress="0" />
+        android:progress="10" />
 
     <TextView
         android:layout_width="match_parent"
@@ -27,22 +32,41 @@
         android:id="@+id/text1"/>
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:width="180dp"
+        android:layout_gravity="center"
         android:id="@+id/button1"
         android:text="음악재생"/>
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:width="180dp"
+        android:layout_gravity="center"
         android:id="@+id/button2"
         android:text="음악정지"/>
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:width="180dp"
+        android:layout_gravity="center"
         android:id="@+id/button3"
         android:text="일시정지"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:width="180dp"
+        android:layout_gravity="center"
+        android:id="@+id/button4"
+        android:background="#FFAA00"
+        android:text="댓글보기"/>
 
 
 </LinearLayout>

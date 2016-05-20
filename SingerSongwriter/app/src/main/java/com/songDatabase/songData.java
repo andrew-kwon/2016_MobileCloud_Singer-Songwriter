@@ -11,15 +11,17 @@ public class songData {
     private String content;
     private String userName;
     private String likeCount;
+    private String userID;
     private Bitmap profilePic;
 
     public songData(String songName, String content,
-                    String userName, String likeCount, Bitmap profilePic)
+                    String userName, String likeCount,String userID, Bitmap profilePic)
     {
         this.songName=songName;
         this.content=content;
         this.userName=userName;
         this.likeCount=likeCount;
+        this.userID=userID;
         this.profilePic=profilePic;
 
     }
@@ -29,6 +31,13 @@ public class songData {
     }
     public void setSongName(String songName) {
         this.songName=songName;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+    public void setUserID(String userID) {
+        this.userID=userID;
     }
 
     public String getContent() {

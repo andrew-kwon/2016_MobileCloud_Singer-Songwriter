@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mysampleapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -43,7 +44,10 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerViewHolder> {
         holder.likeCount.setText(mySongData.get(position).getLikeCount());
 
 //        holder.profilePic.setOnClickListener(clickListener);
-        holder.profilePic.setImageBitmap(mySongData.get(position).getProfilePic());
+//        holder.profilePic.setImageBitmap(mySongData.get(position).getProfilePic());
+        Picasso.with(SongListViewActivity.getContext())
+                .load("http://52.207.214.66/singersong/data/"+mySongData.get(position).getUserID()+".jpg")
+                .into(holder.profilePic);
 //        holder.profilePic.setTag(holder);
 
     }
