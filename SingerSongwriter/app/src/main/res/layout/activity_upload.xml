@@ -62,33 +62,33 @@
             android:text="@string/delete" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/uploadDownloadLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/operationLayout"
-        android:orientation="horizontal" >
+    <!--<LinearLayout-->
+        <!--android:id="@+id/uploadDownloadLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@id/operationLayout"-->
+        <!--android:orientation="horizontal" >-->
 
-        <Button
-            android:id="@+id/buttonUploadFile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/upload_file" />
+        <!--<Button-->
+            <!--android:id="@+id/buttonUploadFile"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="@string/upload_file" />-->
 
-        <Button
-            android:id="@+id/buttonUploadImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/upload_image" />
-    </LinearLayout>
+        <!--<Button-->
+            <!--android:id="@+id/buttonUploadImage"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="@string/upload_image" />-->
+    <!--</LinearLayout>-->
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/uploadDownloadLayout"
+        android:layout_above="@id/operationLayout"
         android:layout_alignParentTop="true"
         android:cacheColorHint="#00000000"
         android:divider="#808080"

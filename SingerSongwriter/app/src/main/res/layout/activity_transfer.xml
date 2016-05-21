@@ -5,23 +5,39 @@
     android:orientation="vertical"
     android:padding="20dp" >
 
-    <Button
-        android:id="@+id/buttonDownloadMain"
+    <TextView
+        android:layout_marginTop="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:padding="20dp"
-        android:text="@string/manage_download" />
+        android:text="My Page"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:id="@+id/myPageText"/>
 
     <Button
         android:id="@+id/buttonUploadMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="30dp"
         android:layout_marginTop="20dp"
-        android:padding="20dp"
-        android:text="@string/manage_upload" />
+        android:width="180dp"
+        android:layout_gravity="center"
+        android:text="업로드 리스트" />
+    <Button
+        android:id="@+id/buttonDownloadMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:width="180dp"
+        android:layout_gravity="center"
+        android:text="다운 리스트" />
+    <Button
+        android:id="@+id/buttonLikeList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:width="180dp"
+        android:layout_gravity="center"
+        android:text="좋아요 리스트" />
 
 </LinearLayout>

@@ -218,56 +218,56 @@ public class UploadActivity extends ListActivity {
             }
         });
 
-        btnUploadFile = (Button) findViewById(R.id.buttonUploadFile);
-        btnUploadImage = (Button) findViewById(R.id.buttonUploadImage);
+//        btnUploadFile = (Button) findViewById(R.id.buttonUploadFile);
+//        btnUploadImage = (Button) findViewById(R.id.buttonUploadImage);
         btnPause = (Button) findViewById(R.id.buttonPause);
         btnResume = (Button) findViewById(R.id.buttonResume);
         btnCancel = (Button) findViewById(R.id.buttonCancel);
         btnDelete = (Button) findViewById(R.id.buttonDelete);
         btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
         btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
-
-        btnUploadFile.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                if (Build.VERSION.SDK_INT >= 19) {
-                    // For Android KitKat, we use a different intent to ensure
-                    // we can
-                    // get the file path from the returned intent URI
-                    intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                    intent.setType("*/*");
-                } else {
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    intent.setType("file/*");
-                }
-
-                startActivityForResult(intent, 0);
-            }
-        });
-
-        btnUploadImage.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent();
-                if (Build.VERSION.SDK_INT >= 19) {
-                    // For Android versions of KitKat or later, we use a
-                    // different intent to ensure
-                    // we can get the file path from the returned intent URI
-                    intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                } else {
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                }
-
-                intent.setType("image/*");
-                startActivityForResult(intent, 0);
-            }
-        });
+//
+//        btnUploadFile.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                if (Build.VERSION.SDK_INT >= 19) {
+//                    // For Android KitKat, we use a different intent to ensure
+//                    // we can
+//                    // get the file path from the returned intent URI
+//                    intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+//                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                    intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+//                    intent.setType("*/*");
+//                } else {
+//                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                    intent.setType("file/*");
+//                }
+//
+//                startActivityForResult(intent, 0);
+//            }
+//        });
+//
+//        btnUploadImage.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent intent = new Intent();
+//                if (Build.VERSION.SDK_INT >= 19) {
+//                    // For Android versions of KitKat or later, we use a
+//                    // different intent to ensure
+//                    // we can get the file path from the returned intent URI
+//                    intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+//                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                    intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+//                } else {
+//                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                }
+//
+//                intent.setType("image/*");
+//                startActivityForResult(intent, 0);
+//            }
+//        });
 
         btnPause.setOnClickListener(new OnClickListener() {
             @Override

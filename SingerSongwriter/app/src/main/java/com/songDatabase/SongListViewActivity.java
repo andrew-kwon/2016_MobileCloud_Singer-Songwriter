@@ -18,10 +18,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.RecyclerUtil.RecyclerAdapter;
 import com.RecyclerUtil.RecyclerItemClickListener;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
-import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -95,7 +95,8 @@ public class SongListViewActivity extends Activity  {
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(View view, int position)
+            {
                 alertShow(position);
             }
 
@@ -171,6 +172,7 @@ public class SongListViewActivity extends Activity  {
             }
         }
 
+        MainActivity.UserIDClass.setMySongItems(rowItems);
         adapter = new RecyclerAdapter(this, rowItems);
         recyclerView.setAdapter(adapter);
 

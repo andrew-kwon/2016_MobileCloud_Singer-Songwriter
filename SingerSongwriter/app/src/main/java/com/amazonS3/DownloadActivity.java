@@ -25,6 +25,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.musicUtil.MusicPlayerActivity;
 import com.mysampleapp.R;
 import com.mysampleapp.Util;
+import com.songDatabase.SongListViewActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -230,8 +231,8 @@ public class DownloadActivity extends ListActivity {
         btnDownload.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DownloadActivity.this, DownloadSelectionActivity.class);
-                startActivityForResult(intent, DOWNLOAD_SELECTION_REQUEST_CODE);
+                Intent intent = new Intent(DownloadActivity.this, SongListViewActivity.class);
+                startActivity(intent);
             }
         });
 

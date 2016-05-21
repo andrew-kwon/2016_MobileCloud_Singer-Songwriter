@@ -45,7 +45,7 @@ import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
 import com.songDatabase.SongListViewActivity;
-import com.songDatabase.UploadImage;
+import com.songDatabase.songData;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpResponse;
@@ -71,6 +71,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /** Class name for log messages. */
@@ -249,19 +250,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_meet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-//
-//                Bitmap myBit = MainActivity.UserIDClass.getUserImage();
-//                String myBitString = BitMapToString(myBit);
-//                Toast.makeText(getApplicationContext(), "" + myBitString.length(), Toast.LENGTH_LONG).show();
-//
-//                Bitmap convertBit = Base64ToBitmap(myBitString);
-//                ImageView testBitmap = (ImageView) findViewById(R.id.testBitmap);
-////                testBitmap.setImageBitmap(convertBit);
-//
-////                Picasso.with(getApplicationContext())
-////                        .load("https://res.cloudinary.com/eightcruz/image/upload/c_lfill,h_32,w_32/qb0mjgu78t3hqjnztfr4")
-////                        .into(testBitmap);
-
 
             }
         });
@@ -478,6 +466,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         static String contents;
         static String SongName;
         static Bitmap UserImage;
+        static List<songData> mySongItems;
 
 
         public static void setUserName(String name)
@@ -509,6 +498,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         public static void setUploadFilepath(String filepath) { UploadFilepath = filepath.replaceAll("\\s","-");;}
         public static String getUploadFilepath(){ return UploadFilepath;}
+
+        public static void setMySongItems(List<songData> mySongItem) { mySongItems = mySongItem;}
+        public static List<songData> getMySongItems(){ return mySongItems;}
 
     }
 
