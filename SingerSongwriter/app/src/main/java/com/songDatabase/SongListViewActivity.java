@@ -137,12 +137,8 @@ public class SongListViewActivity extends Activity  {
             selectFilepath[k] = listArray[5];
             commentCount[k] = Integer.parseInt(listArray[6]);
             likeCount[k] = Integer.parseInt(listArray[7]);
-
-
-//            String myPicture=myPicUrl+listArray[2]+".jpg";
-//            Bitmap myBit =getImageFromURL(myPicture);
             songData item = new songData(listSongname[k], contents[k], listUsername[k],
-                    "" + likeCount[k],listUserID[k], null);
+                    "" + likeCount[k],listUserID[k]);
             if(!rankingFunction) rowItems.add(item);
             else
             {
@@ -164,49 +160,17 @@ public class SongListViewActivity extends Activity  {
                 contents[k]=songDBs[k].comment;
                 commentCount[k]=songDBs[k].commentcount;
                 likeCount[k]=songDBs[k].likecount;
-//                String myPicture=myPicUrl+songDBs[k].userid+".jpg";
-//                Bitmap myBit =getImageFromURL(myPicture);
                 songData item = new songData(listSongname[k], contents[k], listUsername[k],
-                        "" + likeCount[k],listUserID[k],null);
+                        "" + likeCount[k],listUserID[k]);
                 rowItems.add(item);
             }
         }
 
-        MainActivity.UserIDClass.setMySongItems(rowItems);
+        MainActivity.UserIDClass.setRecyclerAdapterType("SongList");
         adapter = new RecyclerAdapter(this, rowItems);
         recyclerView.setAdapter(adapter);
 
     }
-
-    public static Bitmap getImageFromURL(String imageURL){
-        Bitmap imgBitmap = null;
-        HttpURLConnection conn = null;
-        BufferedInputStream bis = null;
-
-        try
-        {
-            URL url = new URL(imageURL);
-            conn = (HttpURLConnection)url.openConnection();
-            conn.connect();
-
-            int nSize = conn.getContentLength();
-            bis = new BufferedInputStream(conn.getInputStream(), nSize);
-            imgBitmap = BitmapFactory.decodeStream(bis);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        } finally{
-            if(bis != null) {
-                try {bis.close();} catch (IOException e) {}
-            }
-            if(conn != null ) {
-                conn.disconnect();
-            }
-        }
-
-        return imgBitmap;
-    }
-
 
     public void alertShow(int position){
 

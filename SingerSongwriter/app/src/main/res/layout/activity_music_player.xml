@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:text="Song Name"
         android:textStyle="bold"
-        android:textSize="25dp"
+        android:textSize="22dp"
         android:id="@+id/songNameText"/>
 
     <SeekBar

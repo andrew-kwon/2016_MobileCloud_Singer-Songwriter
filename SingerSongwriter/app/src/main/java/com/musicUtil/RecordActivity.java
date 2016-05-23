@@ -181,20 +181,24 @@ public class RecordActivity extends Activity {
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
+                        if(value.equals(""))
+                        {
+                            Toast.makeText(getApplicationContext(),"곡 제목을 입력하세요.",Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            MainActivity.UserIDClass.setSongName(value.toString());
 
-                        MainActivity.UserIDClass.setSongName(value.toString());
+                            File filePre = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/recorded.mp4");
 
-                        File filePre = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/recorded.mp4");
+                            File fileNow = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4");
 
-                        File fileNow = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4");
+                            filePre.renameTo(fileNow);    //이름바꾸기
 
-                        filePre.renameTo(fileNow);    //이름바꾸기
+                            String Change_file = Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4";   //경로설정
 
-                        String Change_file = Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4";   //경로설정
-
-                        MainActivity.UserIDClass.setUploadFilepath(Change_file);                                  //올릴 페스 글로벌로 저장.
-                        setText();
-
+                            MainActivity.UserIDClass.setUploadFilepath(Change_file);                                  //올릴 페스 글로벌로 저장.
+                            setText();
+                        }
                     }
                 });
 

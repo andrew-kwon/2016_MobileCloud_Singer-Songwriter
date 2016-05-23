@@ -466,7 +466,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         static String contents;
         static String SongName;
         static Bitmap UserImage;
-        static List<songData> mySongItems;
+        static String recyclerAdapterType;
 
 
         public static void setUserName(String name)
@@ -499,8 +499,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public static void setUploadFilepath(String filepath) { UploadFilepath = filepath.replaceAll("\\s","-");;}
         public static String getUploadFilepath(){ return UploadFilepath;}
 
-        public static void setMySongItems(List<songData> mySongItem) { mySongItems = mySongItem;}
-        public static List<songData> getMySongItems(){ return mySongItems;}
+        public static void setRecyclerAdapterType(String type) {recyclerAdapterType=type;}
+        public static String getRecyclerAdapterType(){return recyclerAdapterType;}
 
     }
 

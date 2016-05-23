@@ -19,7 +19,7 @@
         android:id="@+id/buttonUploadMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:width="180dp"
         android:layout_gravity="center"
         android:text="업로드 리스트" />

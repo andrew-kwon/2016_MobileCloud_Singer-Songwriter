@@ -12,17 +12,15 @@ public class songData {
     private String userName;
     private String likeCount;
     private String userID;
-    private Bitmap profilePic;
 
     public songData(String songName, String content,
-                    String userName, String likeCount,String userID, Bitmap profilePic)
+                    String userName, String likeCount,String userID)
     {
         this.songName=songName;
         this.content=content;
         this.userName=userName;
         this.likeCount=likeCount;
         this.userID=userID;
-        this.profilePic=profilePic;
 
     }
 
@@ -59,12 +57,6 @@ public class songData {
     }
     public void setLikeCount(String likeCount) {
         this.likeCount=likeCount;
-    }
-    public Bitmap getProfilePic() {
-        return profilePic;
-    }
-    public void setProfilePic(Bitmap profilePic) {
-        this.profilePic=profilePic;
     }
 
 

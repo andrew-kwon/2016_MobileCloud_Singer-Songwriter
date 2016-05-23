@@ -1,11 +1,6 @@
 
 <?php
-	define('HOST','localhost');
-	define('USER','root');
-	define('PASS','485197');
-	define('DB','songLikeDB');
-	define('SongDB','singersongBoard');
-	
+	     
 	$likeUser=$_GET['UserID']; 
 	$con = mysqli_connect(HOST,USER,PASS,DB);
  

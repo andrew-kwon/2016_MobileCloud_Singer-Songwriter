@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.RecyclerUtil.RecyclerViewHolder;
+import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
+import com.songDatabase.LikeListViewActivity;
 import com.songDatabase.SongListViewActivity;
 import com.songDatabase.songData;
 import com.squareup.picasso.Picasso;
@@ -47,9 +49,17 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerViewHolder> {
 
 //        holder.profilePic.setOnClickListener(clickListener);
 //        holder.profilePic.setImageBitmap(mySongData.get(position).getProfilePic());
-        Picasso.with(SongListViewActivity.getContext())
-                .load("http://52.207.214.66/singersong/data/"+mySongData.get(position).getUserID()+".jpg")
+        if(MainActivity.UserIDClass.getRecyclerAdapterType().equals("SongList")) {
+            Picasso.with(SongListViewActivity.getContext())
+                    .load("http://52.207.214.66/singersong/data/" + mySongData.get(position).getUserID() + ".jpg")
+                    .into(holder.profilePic);
+        }
+        else if(MainActivity.UserIDClass.getRecyclerAdapterType().equals("LikeList"))
+        { Picasso.with(LikeListViewActivity.getLikeListContect())
+                .load("http://52.207.214.66/singersong/data/" + mySongData.get(position).getUserID() + ".jpg")
                 .into(holder.profilePic);
+
+        }
 //        holder.profilePic.setTag(holder);
 
     }

@@ -1,6 +1,7 @@
 package com.musicUtil;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -17,12 +18,13 @@ import com.mysampleapp.R;
 import java.io.IOException;
 
 
-public class MusicPlayerActivity extends ActionBarActivity {
+public class MusicPlayerActivity extends Activity {
 
     Button btn1, btn2, btn3;
     MediaPlayer mp;
     SeekBar seekBar;
     TextView text;
+    TextView songName;
 
 
     @Override
@@ -30,6 +32,7 @@ public class MusicPlayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
 
+        songName= (TextView)findViewById(R.id.songNameText);
         btn1 = (Button)findViewById(R.id.button1);
         btn2 = (Button)findViewById(R.id.button2);
         btn3 = (Button)findViewById(R.id.button3);
@@ -39,7 +42,13 @@ public class MusicPlayerActivity extends ActionBarActivity {
         Intent intent = getIntent();
         String musicPosition = intent.getStringExtra("pos");
 
+
         Uri file = Uri.parse(musicPosition);
+
+        String musicNameSet[]=musicPosition.split("SingerSongwriter/");
+        String musicName = musicNameSet[1];
+        songName.setText(musicName);
+
 
 //        mp = MediaPlayer.create(MusicPlayerActivity.this, R.raw.music);
 
@@ -108,6 +117,16 @@ public class MusicPlayerActivity extends ActionBarActivity {
 
     }
 
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent backtoDown = new Intent();
+        setResult(RESULT_OK, backtoDown);
+        mp.stop();
+        finish();
+
+    }
     public void Thread(){
         Runnable task = new Runnable(){
 

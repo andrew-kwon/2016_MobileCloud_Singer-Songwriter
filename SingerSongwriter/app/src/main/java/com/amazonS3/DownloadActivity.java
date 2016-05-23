@@ -220,9 +220,7 @@ public class DownloadActivity extends ListActivity {
                             DownloadActivity.this,
                             "pos : " +  fileName ,
                             Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-                    finish();
-
+                    startActivityForResult(intent, 1);
                 }
 
             }
@@ -232,6 +230,7 @@ public class DownloadActivity extends ListActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DownloadActivity.this, SongListViewActivity.class);
+                intent.putExtra("ranking", "FALSE");
                 startActivity(intent);
             }
         });
@@ -239,6 +238,7 @@ public class DownloadActivity extends ListActivity {
         btnPause.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 // Make sure the user has selected a transfer
                 if (checkedIndex >= 0 && checkedIndex < observers.size()) {
@@ -342,18 +342,21 @@ public class DownloadActivity extends ListActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DOWNLOAD_SELECTION_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Start downloading with the key they selected in the
-                // DownloadSelectionActivity screen.
-                String key = data.getStringExtra("key");                     // DownloadSelection 에서 받아온 key값을 extra로 받아온다.
-//
-//                Toast.makeText(getApplicationContext(),
-//                        "key :  " + key , Toast.LENGTH_LONG).show();
 
-                beginDownload(key);
+            if (resultCode == RESULT_OK) {
             }
-        }
+//        if (requestCode == DOWNLOAD_SELECTION_REQUEST_CODE) {
+//            if (resultCode == RESULT_OK) {
+//                // Start downloading with the key they selected in the
+//                // DownloadSelectionActivity screen.
+//                String key = data.getStringExtra("key");                     // DownloadSelection 에서 받아온 key값을 extra로 받아온다.
+////
+////                Toast.makeText(getApplicationContext(),
+////                        "key :  " + key , Toast.LENGTH_LONG).show();
+//
+//                beginDownload(key);
+//            }
+//        }
     }
 
     /*
