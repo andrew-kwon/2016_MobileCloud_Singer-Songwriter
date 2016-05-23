@@ -11,15 +11,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.RecyclerUtil.RecyclerAdapter;
 import com.RecyclerUtil.RecyclerItemClickListener;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
-
-import org.apache.http.HttpEntity;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -30,22 +26,24 @@ import java.util.List;
 
 public class LikeListViewActivity extends Activity  {
 
+
+    static Context likeListContext;
+    String selectFilepath[];
+    String contents[];
+    String listUsername[];
     String listSongname[];
     String listUserID[];
-
-    String likeListSongname[];
-    String likeListUserName[];
-    String likeListUserID[];
-    String likeContents[];
-//    int commentCounts[];
-    String likeCounts[];
-    int likenum;
-    List<songData> rowItems;
+    int commentCount[];
+    int likeCount[];
     List<songData> likeitems;
     RecyclerAdapter adapter;
     RecyclerView recyclerView;
-    static String LIKEURL="http://52.207.214.66/singersong/LikeListView.php";
+    static String LIKEURL="http://52.207.214.66/singersong/changeLike.php";
 
+    public static Context getLikeListContect()
+    {
+        return likeListContext;
+    }
 
 
     @Override
@@ -54,7 +52,8 @@ public class LikeListViewActivity extends Activity  {
 
         setContentView(R.layout.activity_likelistview);
 
-        likenum=0;
+        likeListContext=getApplicationContext();
+
         recyclerView = (RecyclerView) findViewById(R.id.like_recycler_view);
         setList();
 
@@ -74,7 +73,6 @@ public class LikeListViewActivity extends Activity  {
                 // ...
             }
         }));
-        // 아이템을 [클릭]시의 이벤트 리스너를 등록
 
 
     }
@@ -82,66 +80,56 @@ public class LikeListViewActivity extends Activity  {
 
     public void setListView(String songList) {
 
-        rowItems = MainActivity.UserIDClass.getMySongItems();
-        if(rowItems==null)
-        {
-            Toast.makeText(getApplicationContext(),"모아보기를 먼저 클릭하세요",Toast.LENGTH_SHORT).show();
+        String[] songListArray = songList.split("--:--");             // 전체 테이블 받아옴.
 
-        }
-        else {
-            String[] songListArray = songList.split("--:--");             // 전체 테이블 받아옴.
+        likeitems = new ArrayList<songData>();
 
-            likeitems = new ArrayList<songData>();
-            likenum = 0;
-            listSongname = new String[songListArray.length];
-            listUserID = new String[songListArray.length];
+        selectFilepath = new String[songListArray.length];
+        contents = new String[songListArray.length];
+        listUsername = new String[songListArray.length];
+        listSongname = new String[songListArray.length];
+        listUserID  = new String[songListArray.length];
+        commentCount = new int[songListArray.length];
+        likeCount = new int[songListArray.length];
 
-            likeListSongname = new String[songListArray.length];
-            likeListUserID = new String[songListArray.length];
-            likeListUserName = new String[songListArray.length];
-            likeContents = new String[songListArray.length];
-            likeCounts = new String[songListArray.length];
 
-            for (int k = 0; k < songListArray.length - 1; k++) {      //좋아요 리스트 받아오기
+        for (int k = 0; k < songListArray.length-1; k++) {
                 String listArray[];
                 listArray = songListArray[k].split(":::");
-                listSongname[k] = listArray[1];
+
+                listUsername[k] = listArray[1];
                 listUserID[k] = listArray[2];
-            }
+                listSongname[k] = listArray[3];
+                contents[k] = listArray[4];
+                selectFilepath[k] = listArray[5];
+                commentCount[k] = Integer.parseInt(listArray[6]);
+                likeCount[k] = Integer.parseInt(listArray[7]);
 
-            for (int k = 0; k < rowItems.size(); k++) {
+                songData item = new songData(listSongname[k], contents[k], listUsername[k],
+                        "" + likeCount[k],listUserID[k]);
+                likeitems.add(item);
 
-                for (int j = 0; j < songListArray.length - 1; j++) {                            //좋아요 누른 곡만 새로운 item에 넣는다
-                    if (rowItems.get(k).getUserID().equals(listUserID[j])
-                            && rowItems.get(k).getSongName().equals(listSongname[j])) {
-                        likeitems.add(rowItems.get(k));
-                        likeListUserName[likenum] = rowItems.get(k).getUserName();
-                        likeListUserID[likenum] = rowItems.get(k).getUserID();
-                        likeListSongname[likenum] = rowItems.get(k).getSongName();
-                        likeContents[likenum] = rowItems.get(k).getContent();
-                        likeCounts[likenum] = rowItems.get(k).getLikeCount();
-                        likenum++;
-                    }
-                }
             }
 
 
-            adapter = new RecyclerAdapter(this, likeitems);     //좋아요리스트에 추가한다.
-            recyclerView.setAdapter(adapter);
-        }
+        MainActivity.UserIDClass.setRecyclerAdapterType("LikeList");
+        adapter = new RecyclerAdapter(this, likeitems);     //좋아요리스트에 추가한다.
+        recyclerView.setAdapter(adapter);
     }
+
 
     public void alertShow(int position){
 
         AlertDialog.Builder alert = new AlertDialog.Builder(LikeListViewActivity.this);
 
-        final String UserName = likeListUserName[position];
-        final String SongName = likeListSongname[position];
-        final String UserID = likeListUserID[position];
-        final String likeCount = likeCounts[position];
-        final CharSequence[] items = {"다운받기", "좋아요" + " (" + likeCount + ")", "댓글보기" + "취소"};
+        final String UserName = listUsername[position];
+        final String SongName = listSongname[position];
+        final String UserID = listUserID[position];
+        final int likeCounts = likeCount[position];
+        final int commentcount = commentCount[position];
+        final CharSequence[] items = {"다운받기", "좋아요" + " (" + likeCounts + ")", "댓글보기"+" ("+commentcount+")" ,"취소"};
 
-        alert.setTitle(SongName + " : " + likeContents[position])
+        alert.setTitle(SongName + " : " + contents[position])
                 .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
                     public void onClick(DialogInterface dialog, int index) {
                         if (index == 0) {
