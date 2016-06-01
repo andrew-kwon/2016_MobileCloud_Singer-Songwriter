@@ -9,10 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,25 +32,18 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class SongListViewActivity extends Activity  {
-
-    private EditText editTextUserName;
-    private EditText editTextPassword;
-    public static final String USER_NAME = "USERNAME";
 
     static Context mycontect;
     public static Context getContext()
@@ -69,8 +64,6 @@ public class SongListViewActivity extends Activity  {
 
     RecyclerAdapter adapter;
     RecyclerView recyclerView;
-    static String myPicUrl="http://http://52.207.214.66/singersong/data/";
-
 
 
     @Override
@@ -181,30 +174,55 @@ public class SongListViewActivity extends Activity  {
         final String UserID = listUserID[position];
         final int commentCounts = commentCount[position];
         final int likeCounts = likeCount[position];
-        final CharSequence[] items = {"다운받기", "좋아요" + " (" + likeCounts + ")", "댓글보기" + " (" + commentCounts + ")", "취소"};
+        final CharSequence[] items = {"바로듣기", "다운받기", "좋아요" + " (" + likeCounts + ")", "댓글보기" + " (" + commentCounts + ")", "취소"};
 
         alert.setTitle(SongName + " : " + contents[position])
                 .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
                     public void onClick(DialogInterface dialog, int index) {
-                        if (index == 0) {
+                        if (index==0)
+                        {
+                            try {
+                                startSongStream(SongName, UserID, UserName);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else if (index == 1) {
                             Intent intent = new Intent(SongListViewActivity.this, onlyDownloadActivity.class);
                             intent.putExtra("key", UserName + "_" + SongName + ".mp4");
                             startActivity(intent);
-                        } else if (index == 1) {                                                              //좋아요
+                        } else if (index == 2) {                                                              //좋아요
                             UploadDatabaseManager myLikeDB = new UploadDatabaseManager();
                             myLikeDB.upLikeCount(getApplicationContext(), SongName, UserID);
 //                                    if(MainActivity.UserIDClass.getLikeTrue()) setList(); // 좋아요 성공하면 최신화
                             setList();
 
-                        } else if (index == 2) {                                                           //댓글보기
+                        } else if (index == 3) {                                                           //댓글보기
                             // dbContents intent 해서 보여주기. 여기서는 userName,userID, songName 일치하는 댓글 보여주기 ........... 만약 곡 이름이 같다면 업로드 못하게 설정.
                                     showComment(UserID, SongName);
-                                } else if (index == 3) {                                                            //취소
-                                    // 아무것도 하지 않음
                                 }
-                    }});
+                        else if (index == 4) {                                                            //취소
+                                    // 아무것도 하지 않음
+                        }
+                    }
+                });
         alert.show();
 
+    }
+    private void startSongStream(String SongName, String UserID, String UserName) throws UnsupportedEncodingException {
+        MediaPlayer mediaPlayer;
+        mediaPlayer = new MediaPlayer();
+        try {
+            SongName=URLEncoder.encode(SongName,"UTF-8");
+            UserName=URLEncoder.encode(UserName,"UTF-8");
+            Log.v("AUDIOHTTPPLAYER", "https://s3.amazonaws.com/mysongs3/"+UserName+"_"+SongName+".mp4");
+            mediaPlayer.setDataSource("https://s3.amazonaws.com/mysongs3/"+UserName+"_"+SongName+".mp4");
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            Log.v("AUDIOHTTPPLAYER", e.getMessage());
+        }
     }
     private void setList() {
 
