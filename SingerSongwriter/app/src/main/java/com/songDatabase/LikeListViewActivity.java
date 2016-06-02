@@ -12,7 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.RecyclerUtil.RecyclerAdapter;
+import com.RecyclerUtil.SongRecyclerAdapter;
 import com.RecyclerUtil.RecyclerItemClickListener;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
@@ -36,7 +36,7 @@ public class LikeListViewActivity extends Activity  {
     int commentCount[];
     int likeCount[];
     List<songData> likeitems;
-    RecyclerAdapter adapter;
+    SongRecyclerAdapter adapter;
     RecyclerView recyclerView;
     static String LIKEURL="http://52.207.214.66/singersong/changeLike.php";
 
@@ -113,7 +113,7 @@ public class LikeListViewActivity extends Activity  {
 
 
         MainActivity.UserIDClass.setRecyclerAdapterType("LikeList");
-        adapter = new RecyclerAdapter(this, likeitems);     //좋아요리스트에 추가한다.
+        adapter = new SongRecyclerAdapter(this, likeitems);     //좋아요리스트에 추가한다.
         recyclerView.setAdapter(adapter);
     }
 

@@ -13,12 +13,12 @@ import com.mysampleapp.R;
 /**
  * Created by kundan on 10/26/2015.
  */
-public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+public class SongRecyclerViewHolder extends RecyclerView.ViewHolder {
 
     TextView songName,userName,content,likeCount;
     ImageView profilePic;
 
-    public RecyclerViewHolder(View itemView) {
+    public SongRecyclerViewHolder(View itemView) {
         super(itemView);
 
         songName= (TextView) itemView.findViewById(R.id.songName);

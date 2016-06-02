@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.RecyclerUtil.RecyclerViewHolder;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 import com.songDatabase.LikeListViewActivity;
@@ -19,12 +18,12 @@ import java.util.List;
 /**
  * Created by kundan on 10/26/2015.
  */
-public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerViewHolder> {
+public class SongRecyclerAdapter extends  RecyclerView.Adapter<SongRecyclerViewHolder> {
 
     List<songData> mySongData;
     Context context;
     LayoutInflater inflater;
-    public RecyclerAdapter(Context context, List<songData> songDataList) {
+    public SongRecyclerAdapter(Context context, List<songData> songDataList) {
         this.context=context;
         inflater=LayoutInflater.from(context);
         this.mySongData=songDataList;
@@ -32,15 +31,15 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerViewHolder> {
 
     }
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v=inflater.inflate(R.layout.list_item, parent, false);
+    public SongRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v=inflater.inflate(R.layout.song_list_item, parent, false);
 
-        RecyclerViewHolder viewHolder=new RecyclerViewHolder(v);
+        SongRecyclerViewHolder viewHolder=new SongRecyclerViewHolder(v);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(SongRecyclerViewHolder holder, int position) {
 
         holder.songName.setText(mySongData.get(position).getSongName());
         holder.userName.setText(mySongData.get(position).getUserName());
