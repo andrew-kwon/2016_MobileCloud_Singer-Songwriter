@@ -33,6 +33,7 @@ import com.amazonS3.TransferActivity;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobile.user.IdentityManager;
 import com.meetUpfunc.MeetUpListActivity;
+import com.meetUpfunc.MeetUpMenuActivity;
 import com.musicUtil.RecordActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
@@ -233,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View arg0) {
 
-                Intent intent = new Intent(MainActivity.this,MeetUpListActivity.class);
+                Intent intent = new Intent(MainActivity.this,MeetUpMenuActivity.class);
                 startActivity(intent);
 
             }
