@@ -20,10 +20,10 @@ public class MeetupRecyclerAdapter extends  RecyclerView.Adapter<MeetupRecyclerV
     List<MeetData> myMeetData;
     Context context;
     LayoutInflater inflater;
-    public MeetupRecyclerAdapter(Context context, List<MeetData> songDataList) {
+    public MeetupRecyclerAdapter(Context context, List<MeetData> meetDataList) {
         this.context=context;
         inflater=LayoutInflater.from(context);
-        this.myMeetData=songDataList;
+        this.myMeetData=meetDataList;
 
 
     }
@@ -40,9 +40,9 @@ public class MeetupRecyclerAdapter extends  RecyclerView.Adapter<MeetupRecyclerV
 
         holder.meetUpName.setText(myMeetData.get(position).getMeetupName());
         holder.content.setText(myMeetData.get(position).getContent());
-        Picasso.with(MeetUpListActivity.getContext())
-                    .load("http://52.207.214.66/singersong/data/" + myMeetData.get(position).getUserID() + ".jpg")
-                    .into(holder.profilePic);
+//        Picasso.with(MeetUpListActivity.getContext())
+//                    .load("http://52.207.214.66/singersong/data/" + myMeetData.get(position).getUserID() + ".jpg")
+//                    .into(holder.profilePic);
     }
     @Override
     public int getItemCount() {

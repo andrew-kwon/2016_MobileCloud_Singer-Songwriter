@@ -35,6 +35,7 @@ public class MeetUpMenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MeetUpMenuActivity.this,MeetUpListActivity.class);
+                intent.putExtra("join", "FALSE");
                 startActivity(intent);
             }
         });
@@ -43,7 +44,8 @@ public class MeetUpMenuActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MeetUpMenuActivity.this,MeetUpJoinListActivity.class);
+                Intent intent = new Intent(MeetUpMenuActivity.this,MeetUpListActivity.class);
+                intent.putExtra("join", "TRUE");
                 startActivity(intent);
             }
         });
@@ -53,6 +55,9 @@ public class MeetUpMenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // addMeetup( 알림창 --> 모임이름, 내용, 위치, 위치이름 , 사진추가 )
+                Intent intent = new Intent (MeetUpMenuActivity.this, AddMeetUpActivity.class);
+                startActivityForResult(intent,1);
+
 
             }
         });
