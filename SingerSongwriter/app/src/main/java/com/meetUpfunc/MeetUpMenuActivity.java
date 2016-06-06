@@ -18,6 +18,7 @@ public class MeetUpMenuActivity extends Activity {
 
     Button JoinList;
     Button meetupList;
+    Button addMeetUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,8 @@ public class MeetUpMenuActivity extends Activity {
 
         meetupList = (Button) findViewById(R.id.buttonMeetupList);
         JoinList = (Button) findViewById(R.id.buttonJoinList);
+        addMeetUp = (Button) findViewById(R.id.buttonAddMeet);
+
 
         meetupList.setOnClickListener(new View.OnClickListener() {
 
@@ -42,6 +45,15 @@ public class MeetUpMenuActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(MeetUpMenuActivity.this,MeetUpJoinListActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        addMeetUp.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                // addMeetup( 알림창 --> 모임이름, 내용, 위치, 위치이름 , 사진추가 )
+
             }
         });
     }

@@ -31,5 +31,13 @@
         android:width="180dp"
         android:layout_gravity="center"
         android:text="참가 리스트" />
+    <Button
+        android:id="@+id/buttonAddMeet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:width="180dp"
+        android:layout_gravity="center"
+        android:text="+ 모임 추가하기" />
 
 </LinearLayout>

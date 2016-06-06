@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by Administrator on 2016-06-05.
@@ -66,67 +68,60 @@ public class MeetUpJoinListActivity extends Activity {
     public static Context getContext() { return myContext;}
     private void setList() {
 
-        class MeetUpAsync extends AsyncTask<String, Void, String> {
+//        String urlSuffix = "?username="+userName+"&userID="+userID+"&songName="+songName+"&contents="
+//                +contents+"&filepath="+filepath;
+        String urlSuffix="";
 
-            private Dialog loadingDialog;
+        class MeetupListClass extends AsyncTask<String, Void, String>{
+
+            ProgressDialog loading;
+
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loadingDialog = ProgressDialog.show(MeetUpJoinListActivity.this, "Please wait", "Loading...");
+                loading = ProgressDialog.show(MeetUpJoinListActivity.this, "Please Wait",null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                if(s.equals("successfully Upload")) {
+
+
+                    setListView("");
+
+
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+
+                }
             }
 
             @Override
             protected String doInBackground(String... params) {
-                InputStream is = null;
-                String result = null;
+                String s = params[0];
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL("http://52.207.214.66/singersong/meetUpJoinListView.php"+s);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                try{
-                    HttpClient httpClient = new DefaultHttpClient();
-                    HttpPost httpPost = new HttpPost(
-                            "http://52.207.214.66/singersong/meetUpListJoinView.php");
-                    HttpResponse response = httpClient.execute(httpPost);
+                    String result;
 
-                    HttpEntity entity = response.getEntity();
+                    result = bufferedReader.readLine();
 
-                    is = entity.getContent();
-
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
-                    StringBuilder sb = new StringBuilder();
-
-                    String line = null;
-                    while ((line = reader.readLine()) != null)
-                    {
-                        sb.append(line + "\n");
-                    }
-                    result = sb.toString();
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return result;
-            }
-            @Override
-            protected void onPostExecute(String result){
-                String s = result.trim();
-                loadingDialog.dismiss();
-                if(s.charAt(0)==':'){
-
-                    // add set list view
-                    setListView(result);
-
-                }else {
-                    Toast.makeText(getApplicationContext(), "Invalid User Name or Password", Toast.LENGTH_LONG).show();
+                    return result;
+                }catch(Exception e){
+                    return null;
                 }
             }
         }
 
-        MeetUpAsync la = new MeetUpAsync();
-        la.execute();
-
+        MeetupListClass ru = new MeetupListClass();
+        ru.execute(urlSuffix);
     }
 
 
