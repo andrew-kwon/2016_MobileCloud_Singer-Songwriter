@@ -19,7 +19,8 @@ public class UploadMeetData {
 
 
     private static final String ADDMYMEETUP_URL = "http://52.207.214.66/meetUp/addMyParty.php";
-    private static final String SHOWPEOPLE_URL = "http://52.207.214.66/singersong/showListMeetUpPeople.php";
+    private static final String SHOWPEOPLE_URL = "http://52.207.214.66/meetUp/showListMeetUpPeople.php";
+    private static final String ADDMEETUP_URL = "http://52.207.214.66/meetUp/addMeetUp.php";
     String FUNCTION_URL;
     String returnString="";
     int functionNum=0;
@@ -47,6 +48,18 @@ public class UploadMeetData {
         return returnString;
     }
 
+
+    public void addMeetUp(Context context,String setMeetName,String  setDate,String setTime,
+                          String setPlaceName,String setLatitude,String setLongtitude,String setContent){
+    String urlSuffix = "?MeetName="+setMeetName+"&OrnerID="+MainActivity.UserIDClass.getUserID()
+            +"&setDate="+setDate+"&setTime="+setTime+"&setPlaceName="+setPlaceName+"&setLatitude="+setLatitude+"&setLongtitude="+setLongtitude
+            +"&setContent="+setContent;
+        FUNCTION_URL=SHOWPEOPLE_URL;
+        functionNum=1;
+        sendTODB(context, urlSuffix);
+    }
+
+
     private void sendTODB(Context context, String urlSuffix) {
 
         final Context mycontext = context;
@@ -68,7 +81,7 @@ public class UploadMeetData {
                 }
                 if(functionNum==2)
                 {
-                    Toast.makeText(mycontext, s, Toast.LENGTH_LONG).show();
+
                 }
             }
 
@@ -95,4 +108,7 @@ public class UploadMeetData {
         RegisterUser ru = new RegisterUser();
         ru.execute(urlSuffix);
     }
+
+
+
 }

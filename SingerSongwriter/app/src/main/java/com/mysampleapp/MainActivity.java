@@ -177,17 +177,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 
-
-
-
         setContentView(R.layout.activity_main);
-
         setupToolbar(savedInstanceState);
-
         setupNavigationMenu(savedInstanceState);
-
         btn_mypage = (Button) findViewById(R.id.btn_mypage);                          // 마이페이지 기능구현
-
         btn_mypage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -236,17 +229,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent intent = new Intent(MainActivity.this,MeetUpMenuActivity.class);
                 startActivity(intent);
-
             }
 
         });
 
-
-
-
     }
-
-
 
     Bitmap Base64ToBitmap(String myImageData)
     {
@@ -272,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             ProgressDialog loading;
 
-
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -285,17 +271,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(s.equals("successfully Upload")) {
 
                     Log.e("path", "----------------" );
-
                     // Image
                     Bitmap bm =MainActivity.UserIDClass.getUserImage();
                     ba1 = BitMapToString(bm);
                     Log.e("base64", "-----" + ba1);
-
                     // Upload image to server
                     new uploadToServer().execute();
                 }
                 else{
-
                 }
             }
 
