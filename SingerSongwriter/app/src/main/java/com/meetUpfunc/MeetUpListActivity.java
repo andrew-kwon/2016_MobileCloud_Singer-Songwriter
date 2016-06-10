@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -82,9 +83,14 @@ public class MeetUpListActivity extends Activity {
 
             setList();
         recyclerView.setHasFixedSize(true);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        GridLayoutManager layoutManager2 = new GridLayoutManager(getApplicationContext(),2);
+
+
+        recyclerView.setLayoutManager(layoutManager2);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -149,23 +155,20 @@ public class MeetUpListActivity extends Activity {
     public void setListView(String meetList) {
 
         rowItems = new ArrayList<MeetData>();
-        String[] meetListArray = meetList.split("--:--");             // 전체 테이블 받아옴.
+        if(!meetList.isEmpty()) {
+            String[] meetListArray = meetList.split("--:--");             // 전체 테이블 받아옴.
 
-        listMeetname = new String[meetListArray.length-1];
-        listOrderID = new String[meetListArray.length-1];
-        for (int k = 0; k < meetListArray.length - 1; k++) {
-            String listArray[];
-            listArray = meetListArray[k].split(":::");
-
-//            String meetupName, String userID,
-//                    String content)
-
-            listMeetname[k]=listArray[1];
-            listOrderID[k]=listArray[8];
-            MeetData item = new MeetData(listArray[1],listArray[2],listArray[8]);
-            rowItems.add(item);
+            listMeetname = new String[meetListArray.length];
+            listOrderID = new String[meetListArray.length];
+            for (int k = 0; k < meetListArray.length - 1; k++) {
+                String listArray[];
+                listArray = meetListArray[k].split(":::");
+                listMeetname[k] = listArray[1];
+                listOrderID[k] = listArray[9];
+                MeetData item = new MeetData(listArray[1], listArray[2], listArray[9]);
+                rowItems.add(item);
+            }
         }
-
         adapter = new MeetupRecyclerAdapter(this, rowItems);
         recyclerView.setAdapter(adapter);
 

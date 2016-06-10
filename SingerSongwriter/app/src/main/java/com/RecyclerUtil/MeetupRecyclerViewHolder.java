@@ -1,8 +1,10 @@
 package com.RecyclerUtil;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mysampleapp.R;
@@ -12,14 +14,14 @@ import com.mysampleapp.R;
  */
 public class MeetupRecyclerViewHolder extends RecyclerView.ViewHolder {
 
-    TextView meetUpName,content;
+    TextView meetUpName;
     ImageView profilePic;
 
     public MeetupRecyclerViewHolder(View itemView) {
         super(itemView);
 
         meetUpName= (TextView) itemView.findViewById(R.id.MeetupName);
-        content= (TextView) itemView.findViewById(R.id.content);
+//        content= (TextView) itemView.findViewById(R.id.content);
         profilePic= (ImageView) itemView.findViewById(R.id.profilePic);
 
     }

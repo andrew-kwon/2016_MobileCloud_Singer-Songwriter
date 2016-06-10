@@ -9,12 +9,11 @@ public class MeetData{
     private String content;
     private String userID;
 
-    public MeetData(String meetupName, String userID,
-                    String content)
+    public MeetData(String meetupName,String content, String userID)
     {
         this.meetupName=meetupName;
-        this.userID=userID;
         this.content=content;
+        this.userID=userID;
     }
 
     public String getUserID() {
@@ -37,5 +36,6 @@ public class MeetData{
     public void setMeetupName(String meetupName) {
         this.meetupName=meetupName;
     }
+
 
 }

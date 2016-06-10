@@ -11,8 +11,15 @@ import android.os.Bundle;
 
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -24,6 +31,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -46,18 +54,20 @@ public class AddMeetUpActivity extends Activity {
 
 
     private static int RESULT_LOAD_IMAGE = 1;
+    String UPLOAD_MEET_IMAGE = "http://52.207.214.66/meetUp/uploadMeetImage.php";
     Button buttonDate,buttonTime;
-    Button buttonMeetName;
+    Button buttonMeetName,buttonPlaceName;
     Button buttonAdd;
     ImageView imageView;
     UploadMeetData myDB;
-    String setTime="";
-    String setDate="";
+    String setTime="null";
+    String setDate="null";
     String setMeetName="";
-    String setLatitude="";
-    String setLongtitude="";
-    String setContent="";
-    String setPlaceName="";
+    String setLatitude="null";
+    String setLongtitude="null";
+    String setContent="null";
+    String setPlaceName="null";
+    String ba1;
 
     /** Called when the activity is first created. */
     @Override
@@ -81,6 +91,34 @@ public class AddMeetUpActivity extends Activity {
             }
         });
 
+        buttonPlaceName=(Button) findViewById(R.id.btn_placeName);
+        buttonPlaceName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(AddMeetUpActivity.this);
+                alert.setTitle("장소이름");
+                alert.setMessage("장소를 입력하세요.");
+
+                // Set an EditText view to get user input
+                final EditText input = new EditText(AddMeetUpActivity.this);
+                alert.setView(input);
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String value = input.getText().toString();
+                        buttonPlaceName.setText(value);
+                        setPlaceName=value;
+                    }
+                });
+                alert.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Canceled.
+                            }
+                        });
+
+                alert.show();
+            }
+        });
         buttonMeetName =(Button) findViewById(R.id.btn_meetName);
         buttonMeetName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +134,8 @@ public class AddMeetUpActivity extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
                         buttonMeetName.setText(value);
+                        setMeetName=value;
+                        setMeetName=setMeetName.replaceAll("\\s","_");
                     }
                 });
                 alert.setNegativeButton("Cancel",
@@ -132,6 +172,8 @@ public class AddMeetUpActivity extends Activity {
             public void onClick(View arg0) {
                 myDB.addMeetUp(getApplicationContext(),setMeetName, setDate, setTime,
                         setPlaceName, setLatitude,setLongtitude,setContent);
+                new uploadMeetImageToServer().execute();
+
             }
         });
 
@@ -144,7 +186,8 @@ public class AddMeetUpActivity extends Activity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 // 설정버튼 눌렀을 때
             Toast.makeText(getApplicationContext(), hourOfDay + "시 " + minute + "분", Toast.LENGTH_SHORT).show();
-            buttonTime.setText(hourOfDay + " : " + minute);
+            buttonTime.setText(hourOfDay + ":" + minute);
+            setTime=hourOfDay + ":" + minute;
         }
     };
 
@@ -154,7 +197,8 @@ public class AddMeetUpActivity extends Activity {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             monthOfYear++;
             Toast.makeText(getApplicationContext(), year + "년" + monthOfYear + "월" + dayOfMonth + "일", Toast.LENGTH_SHORT).show();
-            buttonDate.setText(year+"." +monthOfYear + "." +dayOfMonth);
+            buttonDate.setText(year + "." + monthOfYear + "." + dayOfMonth);
+            setDate=year+"." +monthOfYear + "." +dayOfMonth;
         }
     };
 
@@ -177,13 +221,21 @@ public class AddMeetUpActivity extends Activity {
 
 
             Bitmap bmp = null;
+            Bitmap resized=null;
             try {
                 bmp = getBitmapFromUri(selectedImage);
+
+               resized = Bitmap.createScaledBitmap(bmp,bmp.getWidth()/8,bmp.getHeight()/8,true);
+
+
+                ba1 = BitMapToString(resized);
+                Log.e("base64", "-----" + ba1);
+                // Upload image to server
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            imageView.setImageBitmap(bmp);
+            imageView.setImageBitmap(resized);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);      //이미지 조정
         }
     }
@@ -198,43 +250,58 @@ public class AddMeetUpActivity extends Activity {
     }
 
 
-//
-//    public class uploadToServer extends AsyncTask<Void, Void, String> {
-//
-//        private ProgressDialog pd = new ProgressDialog(AddMeetUpActivity.this);
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            pd.setMessage("Wait image uploading!");
-//            pd.show();
-//        }
-//
-//        @Override
-//        protected String doInBackground(Void... params) {
-//
-//            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//            nameValuePairs.add(new BasicNameValuePair("base64", ba1));
-//            nameValuePairs.add(new BasicNameValuePair("ImageName", MainActivity.UserIDClass.getUserID() + ".jpg"));
-//            try {
-//                HttpClient httpclient = new DefaultHttpClient();
-//                HttpPost httppost = new HttpPost(UPLOAD_IMAGE);
-//                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//                HttpResponse response = httpclient.execute(httppost);
-//                String st = EntityUtils.toString(response.getEntity());
-//                Log.v("log_tag", "In the try Loop" + st);
-//
-//            } catch (Exception e) {
-//                Log.v("log_tag", "Error in http connection " + e.toString());
-//            }
-//            return "Success";
-//
-//        }
-//
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-//            pd.hide();
-//            pd.dismiss();
-//        }
-//    }
+    public String BitMapToString(Bitmap bitmap){
+
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+
+        return temp;
+    }
+    public final class uploadMeetImageToServer extends AsyncTask<Void, Void, String> {
+
+        private ProgressDialog pd = new ProgressDialog(AddMeetUpActivity.this);
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.setMessage("Wait image uploading!");
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+            try {
+                setMeetName = URLEncoder.encode(setMeetName, "UTF-8");
+            }catch (IOException e) {
+                Log.v("AUDIOHTTPPLAYER", e.getMessage());
+            }
+
+            nameValuePairs.add(new BasicNameValuePair("base64", ba1));
+            nameValuePairs.add(new BasicNameValuePair("ImageName", ""+setMeetName+"_"+MainActivity.UserIDClass.getUserID() + ".jpg"));
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(UPLOAD_MEET_IMAGE);
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httppost);
+                String st = EntityUtils.toString(response.getEntity());
+                Log.v("log_tag", "In the try Loop" + st);
+
+            } catch (Exception e) {
+                Log.v("log_tag", "Error in http connection " + e.toString());
+            }
+            return "Success";
+
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            pd.hide();
+            pd.dismiss();
+        }
+    }
 
 
 }

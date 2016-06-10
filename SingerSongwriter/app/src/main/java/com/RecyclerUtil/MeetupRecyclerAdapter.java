@@ -2,6 +2,7 @@ package com.RecyclerUtil;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import com.meetUpfunc.MeetUpListActivity;
 import com.mysampleapp.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -38,11 +41,20 @@ public class MeetupRecyclerAdapter extends  RecyclerView.Adapter<MeetupRecyclerV
     @Override
     public void onBindViewHolder(MeetupRecyclerViewHolder holder, int position) {
 
-        holder.meetUpName.setText(myMeetData.get(position).getMeetupName());
-        holder.content.setText(myMeetData.get(position).getContent());
-//        Picasso.with(MeetUpListActivity.getContext())
-//                    .load("http://52.207.214.66/singersong/data/" + myMeetData.get(position).getUserID() + ".jpg")
-//                    .into(holder.profilePic);
+        String meetInfo = myMeetData.get(position).getMeetupName()+"\n"+myMeetData.get(position).getContent();
+        holder.meetUpName.setText(meetInfo);
+//        holder.content.setText(myMeetData.get(position).getContent());
+        String setMeetName="";
+        try {
+            setMeetName = URLEncoder.encode(myMeetData.get(position).getMeetupName(), "UTF-8");
+        }catch (IOException e) {
+            Log.v("AUDIOHTTPPLAYER", e.getMessage());
+        }
+        setMeetName=setMeetName.replaceAll("%","%25");
+        Picasso.with(MeetUpListActivity.getContext())
+                    .load("http://52.207.214.66/meetUp/meetUpData/"+ setMeetName + "_" + myMeetData.get(position).getUserID() + ".jpg")
+                    .into(holder.profilePic);
+        holder.profilePic.setAlpha(80);
     }
     @Override
     public int getItemCount() {

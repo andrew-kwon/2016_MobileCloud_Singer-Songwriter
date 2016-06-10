@@ -51,10 +51,13 @@ public class UploadMeetData {
 
     public void addMeetUp(Context context,String setMeetName,String  setDate,String setTime,
                           String setPlaceName,String setLatitude,String setLongtitude,String setContent){
-    String urlSuffix = "?MeetName="+setMeetName+"&OrnerID="+MainActivity.UserIDClass.getUserID()
-            +"&setDate="+setDate+"&setTime="+setTime+"&setPlaceName="+setPlaceName+"&setLatitude="+setLatitude+"&setLongtitude="+setLongtitude
-            +"&setContent="+setContent;
-        FUNCTION_URL=SHOWPEOPLE_URL;
+
+        setPlaceName = setPlaceName.replaceAll("\\s","_");
+
+    String urlSuffix = "?MeetName="+setMeetName.trim()+"&OrnerID="+MainActivity.UserIDClass.getUserID()
+            +"&setDate="+setDate+"&setTime="+setTime+"&setPlaceName="+setPlaceName.trim()+"&setLatitude="+setLatitude+"&setLongtitude="+setLongtitude
+            +"&setContent="+setContent+"&OrnerName="+MainActivity.UserIDClass.getUserName();
+        FUNCTION_URL=ADDMEETUP_URL;
         functionNum=1;
         sendTODB(context, urlSuffix);
     }
@@ -78,6 +81,7 @@ public class UploadMeetData {
                 if (functionNum == 1){
                     returnString=s;
                     Toast.makeText(mycontext, s, Toast.LENGTH_LONG).show();
+
                 }
                 if(functionNum==2)
                 {
