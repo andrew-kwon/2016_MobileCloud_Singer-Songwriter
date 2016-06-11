@@ -4,6 +4,7 @@
     android:layout_width="160dp"
     android:layout_height="160dp"
     android:layout_marginBottom="16dp"
+    android:layout_marginTop="16dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:background="#C5CAE9"
@@ -12,23 +13,25 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:gravity="center"
-        android:paddingTop="16dp"
+        android:paddingTop="0dp"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/profilePic"
             android:layout_width="160dp"
             android:layout_height="160dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
             android:scaleType="centerCrop"
-            android:layout_above="@+id/content" />
+            android:layout_above="@+id/content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/MeetupName"
             android:layout_alignParentTop="true"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/profilePic"
             android:text="Android "
             android:textColor="#FFFFFF"
             android:textStyle="bold"
@@ -37,6 +40,22 @@
             android:layout_alignLeft="@id/profilePic"
             android:layout_alignRight="@id/profilePic"
             android:layout_alignTop="@id/profilePic"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/MeetupInfo"
+            android:layout_alignParentTop="true"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Android "
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_alignBottom="@id/profilePic"
+            android:layout_alignLeft="@id/profilePic"
+            android:layout_alignRight="@id/profilePic"
+            android:layout_alignTop="@id/profilePic"
+            android:layout_marginTop="100dp"
             android:gravity="center"
             />
     </RelativeLayout>

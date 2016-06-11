@@ -41,9 +41,9 @@ public class MeetupRecyclerAdapter extends  RecyclerView.Adapter<MeetupRecyclerV
     @Override
     public void onBindViewHolder(MeetupRecyclerViewHolder holder, int position) {
 
-        String meetInfo = myMeetData.get(position).getMeetupName()+"\n"+myMeetData.get(position).getContent();
+        String meetInfo = myMeetData.get(position).getMeetupName();
         holder.meetUpName.setText(meetInfo);
-//        holder.content.setText(myMeetData.get(position).getContent());
+        holder.meetUpInfo.setText(""+myMeetData.get(position).getCountPeople()+" Members");
         String setMeetName="";
         try {
             setMeetName = URLEncoder.encode(myMeetData.get(position).getMeetupName(), "UTF-8");
@@ -54,7 +54,7 @@ public class MeetupRecyclerAdapter extends  RecyclerView.Adapter<MeetupRecyclerV
         Picasso.with(MeetUpListActivity.getContext())
                     .load("http://52.207.214.66/meetUp/meetUpData/"+ setMeetName + "_" + myMeetData.get(position).getUserID() + ".jpg")
                     .into(holder.profilePic);
-        holder.profilePic.setAlpha(80);
+//        holder.profilePic.setAlpha(90);
     }
     @Override
     public int getItemCount() {

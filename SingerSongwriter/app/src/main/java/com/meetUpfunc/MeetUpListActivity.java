@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,6 +22,7 @@ import com.RecyclerUtil.RecyclerItemClickListener;
 import com.amazonS3.UploadActivity;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
+import com.songDatabase.SongListViewActivity;
 import com.songDatabase.UploadDatabaseManager;
 import com.songDatabase.onlyDownloadActivity;
 import com.songDatabase.songData;
@@ -59,7 +61,8 @@ public class MeetUpListActivity extends Activity {
     String listURL="http://52.207.214.66/meetUp/meetUpListView.php";
     String FUNC_URL="";
     String urlParse="";
-
+    String[] listLati;
+    String[] listLong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,29 +72,23 @@ public class MeetUpListActivity extends Activity {
         myDB = new UploadMeetData();
         recyclerView = (RecyclerView) findViewById(R.id.my_meetup_view);
 
-
         Intent intent = getIntent();
         String join = intent.getStringExtra("join");
         if(join.equals("FALSE")){
             FUNC_URL=listURL;
-
         }
         else{
             FUNC_URL=joinURL;
             urlParse="?myUserID="+MainActivity.UserIDClass.getUserID();
         }
-
-            setList();
+        setList();
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
         GridLayoutManager layoutManager2 = new GridLayoutManager(getApplicationContext(),2);
 
-
         recyclerView.setLayoutManager(layoutManager2);
-
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position)
@@ -136,11 +133,8 @@ public class MeetUpListActivity extends Activity {
                     URL url = new URL(FUNC_URL+s);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
                     String result;
-
                     result = bufferedReader.readLine();
-
                     return result;
                 }catch(Exception e){
                     return null;
@@ -160,12 +154,16 @@ public class MeetUpListActivity extends Activity {
 
             listMeetname = new String[meetListArray.length];
             listOrderID = new String[meetListArray.length];
+            listLati = new String[meetListArray.length];
+            listLong = new String[meetListArray.length];
             for (int k = 0; k < meetListArray.length - 1; k++) {
                 String listArray[];
                 listArray = meetListArray[k].split(":::");
                 listMeetname[k] = listArray[1];
+                listLati[k]=listArray[3];
+                listLong[k]=listArray[4];
                 listOrderID[k] = listArray[9];
-                MeetData item = new MeetData(listArray[1], listArray[2], listArray[9]);
+                MeetData item = new MeetData(listArray[1], listArray[2], listArray[9],listArray[10]);
                 rowItems.add(item);
             }
         }
@@ -181,6 +179,8 @@ public class MeetUpListActivity extends Activity {
 
         final String MeetName = listMeetname[position];
         final String OrderID = listOrderID[position];
+        final String latitude = listLati[position];
+        final String longitude = listLong[position];
         final CharSequence[] items = {"참여하기", "위치보기", "참여자보기" , "채팅하기" , "취소"};
 
         alert.setTitle(MeetName)
@@ -189,10 +189,15 @@ public class MeetUpListActivity extends Activity {
                         if (index==0)
                         {
                             myDB.addMyParty(myContext, MeetName, OrderID);
-
                         }
                         else if (index == 1) {
-                            //mapview(latitute,longtitude)
+
+                            //(latitude,longitude);
+
+                            Intent intent = new Intent(MeetUpListActivity.this,getMapsActivity.class);
+                            intent.putExtra("place_lati", latitude);
+                            intent.putExtra("place_longi",longitude);
+                            startActivityForResult(intent, 1);
 
                         } else if (index == 2) {
                             //String = showListMeetUpPeople      (회원 ID, 회원 이름 ) --> 리스트뷰로 알려줌
@@ -207,6 +212,12 @@ public class MeetUpListActivity extends Activity {
                 });
         alert.show();
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+        }
     }
 
 }

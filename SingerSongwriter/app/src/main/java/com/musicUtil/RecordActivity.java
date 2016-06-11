@@ -51,14 +51,12 @@ public class RecordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_main);
-
         Button recordBtn = (Button) findViewById(R.id.recordBtn);
         Button recordStopBtn = (Button) findViewById(R.id.recordStopBtn);
         Button playBtn = (Button) findViewById(R.id.playBtn);
         Button playStopBtn = (Button) findViewById(R.id.playStopBtn);
         Button uploadBtn = (Button) findViewById(R.id.uploadBtn);
         final TextView txtcount = (TextView) findViewById(R.id.countTextView);
-
         File file = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter");
         if (!file.isDirectory()) file.mkdirs();
 
@@ -69,12 +67,10 @@ public class RecordActivity extends Activity {
 
                 cnt++;
                 String time = new Integer(cnt).toString();
-
                 long millis = cnt;
                 int seconds = (int) (millis / 60);
                 int minutes = seconds / 60;
                 seconds = seconds % 60;
-
                 txtcount.setText(String.format("%d:%02d:%02d", minutes, seconds, millis));
 
             }
@@ -82,7 +78,6 @@ public class RecordActivity extends Activity {
             @Override
             public void onFinish() {
                 cnt = 0;
-
             }
         };
 
@@ -109,7 +104,6 @@ public class RecordActivity extends Activity {
                             "녹음을 시작합니다.", Toast.LENGTH_LONG).show();
                     recorder.prepare();
                     recorder.start();
-
                     t.cancel();
                     t.onFinish();
                     t.start();
@@ -125,19 +119,16 @@ public class RecordActivity extends Activity {
             public void onClick(View v) {
                 if (recorder == null)
                     return;
-
                 recorder.stop();
                 recorder.release();
                 recorder = null;
                 t.cancel();
-
                 Toast.makeText(getApplicationContext(),
                         "녹음이 중지되었습니다.", Toast.LENGTH_LONG).show();
                 // TODO Auto-generated method stub
 
             }
         });
-
 
         playBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
@@ -164,9 +155,7 @@ public class RecordActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-
                 AlertDialog.Builder alert = new AlertDialog.Builder(RecordActivity.this);
-
                 alert.setTitle("곡 제목");
                 alert.setMessage("곡 제목을 입력하세요.");
                 String userName = MainActivity.UserIDClass.getUserName();
@@ -176,8 +165,6 @@ public class RecordActivity extends Activity {
                 // Set an EditText view to get user input
                 final EditText input = new EditText(RecordActivity.this);
                 alert.setView(input);
-
-
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
@@ -187,22 +174,15 @@ public class RecordActivity extends Activity {
                         }
                         else {
                             MainActivity.UserIDClass.setSongName(value.toString());
-
                             File filePre = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/recorded.mp4");
-
                             File fileNow = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4");
-
                             filePre.renameTo(fileNow);    //이름바꾸기
-
                             String Change_file = Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4";   //경로설정
-
                             MainActivity.UserIDClass.setUploadFilepath(Change_file);                                  //올릴 페스 글로벌로 저장.
                             setText();
                         }
                     }
                 });
-
-
                 alert.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -211,8 +191,6 @@ public class RecordActivity extends Activity {
                         });
 
                 alert.show();
-
-
             }
         });
 
@@ -234,7 +212,6 @@ public class RecordActivity extends Activity {
 
             ProgressDialog loading;
 
-
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -251,11 +228,9 @@ public class RecordActivity extends Activity {
                     intent.putExtra("path", MainActivity.UserIDClass.getUploadFilepath());
                     startActivity(intent);
                     finish();
-
                 }
                 else{
                     Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
-
                 }
             }
 
@@ -267,11 +242,8 @@ public class RecordActivity extends Activity {
                     URL url = new URL(UPLOAD_URL+s);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
                     String result;
-
                     result = bufferedReader.readLine();
-
                     return result;
                 }catch(Exception e){
                     return null;
@@ -283,12 +255,10 @@ public class RecordActivity extends Activity {
         ru.execute(urlSuffix);
     }
 
-
     public void setText()                                                          /////// 설명 추가하는 알람창
     {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(RecordActivity.this);
-
         alert.setTitle("내용");
         alert.setMessage("간단한 설명을 입력하세요.");
 
@@ -299,12 +269,9 @@ public class RecordActivity extends Activity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 MainActivity.UserIDClass.setContents(value.toString());
-
                 uploadSongDB();
-
             }
         });
-
 
         alert.setNegativeButton("Cancel",
                 new DialogInterface.OnClickListener() {
@@ -319,7 +286,6 @@ public class RecordActivity extends Activity {
 
     private void playAudio(String url) throws Exception{
         killMediaPlayer();
-
         player = new MediaPlayer();
         player.setDataSource(url);
         player.prepare();
@@ -339,7 +305,6 @@ public class RecordActivity extends Activity {
                 e.printStackTrace();
             }
         }
-
     }
 
     protected void onPause(){

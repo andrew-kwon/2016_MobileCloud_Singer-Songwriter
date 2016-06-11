@@ -49,13 +49,8 @@ public class MusicPlayerActivity extends Activity {
         String musicName = musicNameSet[1];
         songName.setText(musicName);
 
-
 //        mp = MediaPlayer.create(MusicPlayerActivity.this, R.raw.music);
-
         mp = MediaPlayer.create(MusicPlayerActivity.this,file);         // 보내진 파일이 music 파일이 아니라면 error가 생김.
-
-
-
 
         seekBar = (SeekBar)findViewById(R.id.playbar);
 

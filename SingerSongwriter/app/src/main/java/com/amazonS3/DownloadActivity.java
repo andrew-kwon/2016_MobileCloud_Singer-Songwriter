@@ -191,12 +191,12 @@ public class DownloadActivity extends ListActivity {
         });
 
         btnDownload = (Button) findViewById(R.id.buttonDownload);
-        btnPause = (Button) findViewById(R.id.buttonPause);
-        btnResume = (Button) findViewById(R.id.buttonResume);
-        btnCancel = (Button) findViewById(R.id.buttonCancel);
-        btnDelete = (Button) findViewById(R.id.buttonDelete);
-        btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
-        btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
+//        btnPause = (Button) findViewById(R.id.buttonPause);
+//        btnResume = (Button) findViewById(R.id.buttonResume);
+//        btnCancel = (Button) findViewById(R.id.buttonCancel);
+//        btnDelete = (Button) findViewById(R.id.buttonDelete);
+//        btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
+//        btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
 
         // Launches an activity for the user to select an object in their S3
 
@@ -234,108 +234,108 @@ public class DownloadActivity extends ListActivity {
                 startActivity(intent);
             }
         });
-
-        btnPause.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                // Make sure the user has selected a transfer
-                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-                    Boolean paused = transferUtility.pause(observers.get(checkedIndex)
-                            .getId());
-                    /**
-                     * If paused does not return true, it is likely because the
-                     * user is trying to pause a download that is not in a
-                     * pausable state (For instance it is already paused, or
-                     * canceled).
-                     */
-                    if (!paused) {
-                        Toast.makeText(
-                                DownloadActivity.this,
-                                "Cannot Pause transfer.  You can only pause transfers in a WAITING or IN_PROGRESS state.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        btnResume.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Make sure the user has selected a transfer
-                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-                    TransferObserver resumed = transferUtility.resume(observers.get(checkedIndex)
-                            .getId());
-                    // Sets a new transfer listener to the original observer.
-                    // This will overwrite existing listener.
-                    observers.get(checkedIndex).setTransferListener(new DownloadListener());
-
-                    /**
-                     * If resume returns null, it is likely because the transfer
-                     * is not in a resumable state (For instance it is already
-                     * running).
-                     */
-                    if (resumed == null) {
-                        Toast.makeText(
-                                DownloadActivity.this,
-                                "Cannot resume transfer.  You can only resume transfers in a PAUSED state.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        btnCancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Make sure a transfer is selected
-                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-                    Boolean canceled = transferUtility.cancel(observers.get(checkedIndex).getId());
-                    /**
-                     * If cancel returns false, it is likely because the
-                     * transfer is already canceled
-                     */
-                    if (!canceled) {
-                        Toast.makeText(
-                                DownloadActivity.this,
-                                "Cannot cancel transfer.  You can only resume transfers in a PAUSED, WAITING, or IN_PROGRESS state.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        btnDelete.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Make sure a transfer is selected
-                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-                    // Deletes a record but the file is not deleted.
-                    transferUtility.deleteTransferRecord(observers.get(checkedIndex).getId());
-                    observers.remove(checkedIndex);
-                    transferRecordMaps.remove(checkedIndex);
-                    checkedIndex = INDEX_NOT_CHECKED;
-                    updateButtonAvailability();
-                    updateList();
-                }
-            }
-        });
-
-        btnPauseAll.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                transferUtility.pauseAllWithType(TransferType.DOWNLOAD);
-            }
-        });
-
-        btnCancelAll.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                transferUtility.cancelAllWithType(TransferType.DOWNLOAD);
-            }
-        });
+//
+//        btnPause.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//                // Make sure the user has selected a transfer
+//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+//                    Boolean paused = transferUtility.pause(observers.get(checkedIndex)
+//                            .getId());
+//                    /**
+//                     * If paused does not return true, it is likely because the
+//                     * user is trying to pause a download that is not in a
+//                     * pausable state (For instance it is already paused, or
+//                     * canceled).
+//                     */
+//                    if (!paused) {
+//                        Toast.makeText(
+//                                DownloadActivity.this,
+//                                "Cannot Pause transfer.  You can only pause transfers in a WAITING or IN_PROGRESS state.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//
+//        btnResume.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                // Make sure the user has selected a transfer
+//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+//                    TransferObserver resumed = transferUtility.resume(observers.get(checkedIndex)
+//                            .getId());
+//                    // Sets a new transfer listener to the original observer.
+//                    // This will overwrite existing listener.
+//                    observers.get(checkedIndex).setTransferListener(new DownloadListener());
+//
+//                    /**
+//                     * If resume returns null, it is likely because the transfer
+//                     * is not in a resumable state (For instance it is already
+//                     * running).
+//                     */
+//                    if (resumed == null) {
+//                        Toast.makeText(
+//                                DownloadActivity.this,
+//                                "Cannot resume transfer.  You can only resume transfers in a PAUSED state.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//
+//        btnCancel.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Make sure a transfer is selected
+//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+//                    Boolean canceled = transferUtility.cancel(observers.get(checkedIndex).getId());
+//                    /**
+//                     * If cancel returns false, it is likely because the
+//                     * transfer is already canceled
+//                     */
+//                    if (!canceled) {
+//                        Toast.makeText(
+//                                DownloadActivity.this,
+//                                "Cannot cancel transfer.  You can only resume transfers in a PAUSED, WAITING, or IN_PROGRESS state.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//
+//        btnDelete.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Make sure a transfer is selected
+//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+//                    // Deletes a record but the file is not deleted.
+//                    transferUtility.deleteTransferRecord(observers.get(checkedIndex).getId());
+//                    observers.remove(checkedIndex);
+//                    transferRecordMaps.remove(checkedIndex);
+//                    checkedIndex = INDEX_NOT_CHECKED;
+//                    updateButtonAvailability();
+//                    updateList();
+//                }
+//            }
+//        });
+//
+//        btnPauseAll.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                transferUtility.pauseAllWithType(TransferType.DOWNLOAD);
+//            }
+//        });
+//
+//        btnCancelAll.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                transferUtility.cancelAllWithType(TransferType.DOWNLOAD);
+//            }
+//        });
 
         updateButtonAvailability();
     }
@@ -408,10 +408,10 @@ public class DownloadActivity extends ListActivity {
      */
     private void updateButtonAvailability() {
         boolean availability = checkedIndex >= 0;
-        btnPause.setEnabled(availability);
-        btnResume.setEnabled(availability);
-        btnCancel.setEnabled(availability);
-        btnDelete.setEnabled(availability);
+//        btnPause.setEnabled(availability);
+//        btnResume.setEnabled(availability);
+//        btnCancel.setEnabled(availability);
+//        btnDelete.setEnabled(availability);
     }
 
     /*

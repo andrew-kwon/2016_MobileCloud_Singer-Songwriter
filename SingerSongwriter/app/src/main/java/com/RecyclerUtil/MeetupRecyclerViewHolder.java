@@ -15,13 +15,14 @@ import com.mysampleapp.R;
 public class MeetupRecyclerViewHolder extends RecyclerView.ViewHolder {
 
     TextView meetUpName;
+    TextView meetUpInfo;
     ImageView profilePic;
 
     public MeetupRecyclerViewHolder(View itemView) {
         super(itemView);
 
         meetUpName= (TextView) itemView.findViewById(R.id.MeetupName);
-//        content= (TextView) itemView.findViewById(R.id.content);
+        meetUpInfo= (TextView) itemView.findViewById(R.id.MeetupInfo);
         profilePic= (ImageView) itemView.findViewById(R.id.profilePic);
 
     }

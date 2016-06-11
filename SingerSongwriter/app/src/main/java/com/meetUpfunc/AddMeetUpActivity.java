@@ -12,23 +12,18 @@ import android.os.Bundle;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -57,14 +52,14 @@ public class AddMeetUpActivity extends Activity {
     String UPLOAD_MEET_IMAGE = "http://52.207.214.66/meetUp/uploadMeetImage.php";
     Button buttonDate,buttonTime;
     Button buttonMeetName,buttonPlaceName;
-    Button buttonAdd;
+    Button buttonAdd, buttonGetPlace;
     ImageView imageView;
     UploadMeetData myDB;
     String setTime="null";
     String setDate="null";
     String setMeetName="";
     String setLatitude="null";
-    String setLongtitude="null";
+    String setLongitude="null";
     String setContent="null";
     String setPlaceName="null";
     String ba1;
@@ -75,7 +70,10 @@ public class AddMeetUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addmeetup);
         myDB=new UploadMeetData();
-        final DatePickerDialog dialog = new DatePickerDialog(this, listener, 2016, 5, 6);
+
+        Calendar calendar2 = Calendar.getInstance();
+        String nowTime = calendar2.getTime().toString();
+        final DatePickerDialog dialog = new DatePickerDialog(this, listener, 2016, 5, 10);
         final TimePickerDialog timedialog = new TimePickerDialog(this, timelistener, 10, 00, false);
         imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -165,14 +163,31 @@ public class AddMeetUpActivity extends Activity {
             }
         });
 
+        buttonGetPlace = (Button) findViewById(R.id.btn_select_place);
+        buttonGetPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+
+                Intent intent = new Intent(AddMeetUpActivity.this,setMapsActivity.class);
+                startActivityForResult(intent, 1);
+
+
+            }
+        });
+
 
         buttonAdd = (Button) findViewById(R.id.button_add);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                myDB.addMeetUp(getApplicationContext(),setMeetName, setDate, setTime,
-                        setPlaceName, setLatitude,setLongtitude,setContent);
+                boolean returnAdd = myDB.addMeetUp(getApplicationContext(),setMeetName, setDate, setTime,
+                        setPlaceName, setLatitude,setLongitude,setContent);
                 new uploadMeetImageToServer().execute();
+//
+//                Intent backtoComment = new Intent();
+//                setResult(RESULT_OK, backtoComment);
+//                finish();
+
 
             }
         });
@@ -225,7 +240,7 @@ public class AddMeetUpActivity extends Activity {
             try {
                 bmp = getBitmapFromUri(selectedImage);
 
-               resized = Bitmap.createScaledBitmap(bmp,bmp.getWidth()/8,bmp.getHeight()/8,true);
+               resized = Bitmap.createScaledBitmap(bmp,bmp.getWidth()/4,bmp.getHeight()/4,true);
 
 
                 ba1 = BitMapToString(resized);
@@ -237,6 +252,15 @@ public class AddMeetUpActivity extends Activity {
             }
             imageView.setImageBitmap(resized);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);      //이미지 조정
+        }
+
+        if(resultCode==2 && data !=null)
+        {
+//         Toast.makeText(getApplicationContext(), "" + data.getStringExtra("place_lati") + " : " + data.getStringExtra("place_longti"), Toast.LENGTH_LONG).show();
+            setLatitude=data.getStringExtra("place_lati");
+            setLongitude=data.getStringExtra("place_longti");
+            buttonGetPlace.setText("등록완료");
+
         }
     }
 

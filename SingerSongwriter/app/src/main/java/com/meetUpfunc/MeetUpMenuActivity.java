@@ -57,10 +57,15 @@ public class MeetUpMenuActivity extends Activity {
                 // addMeetup( 알림창 --> 모임이름, 내용, 위치, 위치이름 , 사진추가 )
                 Intent intent = new Intent (MeetUpMenuActivity.this, AddMeetUpActivity.class);
                 startActivityForResult(intent,1);
-
-
             }
         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+        }
+    }
+
 
 }

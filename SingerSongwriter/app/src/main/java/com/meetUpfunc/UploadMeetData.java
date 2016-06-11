@@ -23,6 +23,7 @@ public class UploadMeetData {
     private static final String ADDMEETUP_URL = "http://52.207.214.66/meetUp/addMeetUp.php";
     String FUNCTION_URL;
     String returnString="";
+    boolean returnBoolean;
     int functionNum=0;
 
     UploadMeetData() {
@@ -49,7 +50,7 @@ public class UploadMeetData {
     }
 
 
-    public void addMeetUp(Context context,String setMeetName,String  setDate,String setTime,
+    public boolean addMeetUp(Context context,String setMeetName,String  setDate,String setTime,
                           String setPlaceName,String setLatitude,String setLongtitude,String setContent){
 
         setPlaceName = setPlaceName.replaceAll("\\s","_");
@@ -60,6 +61,7 @@ public class UploadMeetData {
         FUNCTION_URL=ADDMEETUP_URL;
         functionNum=1;
         sendTODB(context, urlSuffix);
+        return returnBoolean;
     }
 
 
@@ -81,7 +83,8 @@ public class UploadMeetData {
                 if (functionNum == 1){
                     returnString=s;
                     Toast.makeText(mycontext, s, Toast.LENGTH_LONG).show();
-
+                    if(s!=null) returnBoolean=true;
+                    else returnBoolean = false;
                 }
                 if(functionNum==2)
                 {
