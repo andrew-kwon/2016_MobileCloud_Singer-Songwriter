@@ -23,6 +23,7 @@ public class UploadMeetData {
     private static final String ADDMEETUP_URL = "http://52.207.214.66/meetUp/addMeetUp.php";
     private static final String UPDATETIME_URL = "http://52.207.214.66/meetUp/updateMeetTime.php";
     private static final String UPDATEPLACE_URL = "http://52.207.214.66/meetUp/updateMeetPlace.php";
+    private static final String UPAUTHORITY_URL = "http://52.207.214.66/meetUp/updateAuthority.php";
 
     String FUNCTION_URL;
     String returnString="";
@@ -35,7 +36,7 @@ public class UploadMeetData {
 
     public void addMyParty(Context context, String MeetName, String OrnerID) {
 
-        String urlSuffix = "?myUserID="+ MainActivity.UserIDClass.getUserID()+"&MeetName="+MeetName+"&OrnerID="+OrnerID;
+        String urlSuffix = "?myUserID="+ MainActivity.UserIDClass.getUserID()+"&MeetName="+MeetName+"&OrnerID="+OrnerID+"&myUserName="+MainActivity.UserIDClass.getUserName();
 
         FUNCTION_URL=ADDMYMEETUP_URL;
         functionNum=2;
@@ -64,15 +65,16 @@ public class UploadMeetData {
 
     }
 
-    public String showListMeetUpPeople(Context context, String MeetName, String OrnerID) {
-
-        String urlSuffix = "?MeetName="+MeetName+"&OrnerID="+OrnerID;
-        FUNCTION_URL=SHOWPEOPLE_URL;
-        functionNum=1;
+    public void updateAuthority(Context context,String meetName, String ornerID,String userID)
+    {
+//        Toast.makeText(context,meetDate+"."+meetTime,Toast.LENGTH_LONG).show();
+        String urlSuffix = "?meetName="+meetName+"&ornerID="+ornerID+"&userID="+userID;
+        FUNCTION_URL=UPAUTHORITY_URL;
+        functionNum=2;
         sendTODB(context, urlSuffix);
-        return returnString;
-    }
 
+
+    }
 
     public boolean addMeetUp(Context context,String setMeetName,String  setDate,String setTime,
                           String setPlaceName,String setLatitude,String setLongtitude,String setContent){
@@ -81,7 +83,7 @@ public class UploadMeetData {
 
     String urlSuffix = "?MeetName="+setMeetName.trim()+"&OrnerID="+MainActivity.UserIDClass.getUserID()
             +"&setDate="+setDate+"&setTime="+setTime+"&setPlaceName="+setPlaceName.trim()+"&setLatitude="+setLatitude+"&setLongtitude="+setLongtitude
-            +"&setContent="+setContent+"&OrnerName="+MainActivity.UserIDClass.getUserName();
+            +"&setContent="+setContent+"&OrnerName="+MainActivity.UserIDClass.getUserName()+"&myUserName="+MainActivity.UserIDClass.getUserName();
         FUNCTION_URL=ADDMEETUP_URL;
         functionNum=1;
         sendTODB(context, urlSuffix);

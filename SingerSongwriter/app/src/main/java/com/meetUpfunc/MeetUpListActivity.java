@@ -213,8 +213,8 @@ public class MeetUpListActivity extends Activity {
         final String meetPlaceName = listPlaceName[position];
         final String countPeople = listCountPeople[position];
         final String getAuthority = listAuthority[position];
-        final CharSequence[] items = {"참여하기", "위치보기"+"[ "+meetPlaceName+" ]","시간"+"[ "+meetTime+" ]", "참여자보기"+"[ "+countPeople+" 명 ]" , "채팅하기" , "취소"};
-        final CharSequence[] authorityItems ={"위치수정"+"[ "+meetPlaceName+" ]","시간수정"+"[ "+meetTime+" ]","참여자 관리"+"[ "+countPeople+" 명 ]","취소"};
+        final CharSequence[] items = {"참여하기", "위치보기"+" [ "+meetPlaceName+" ]","시간"+" [ "+meetTime+" ]", "참여자보기"+" [ "+countPeople+"명 ]" , "채팅하기" , "취소"};
+        final CharSequence[] authorityItems ={"위치수정"+" [ "+meetPlaceName+" ]","시간수정"+" [ "+meetTime+" ]","참여자 관리"+" [ "+countPeople+"명 ]","취소"};
 
         if(join.equals("TRUE")&&getAuthority.equals("1"))
         {   alert.setTitle(MeetName)
@@ -279,6 +279,13 @@ public class MeetUpListActivity extends Activity {
                             datedialog.show();
                         } else if (index == 2) {
                          //참여자 관리
+                            Intent intent = new Intent(MeetUpListActivity.this,ShowListMeetUpPeople.class);
+                            intent.putExtra("meetName", MeetName);
+                            intent.putExtra("ornerID", OrderID);
+                            intent.putExtra("authority","1");
+                            startActivityForResult(intent, 1);
+
+
                         } else if (index == 3) {//취소
                         }
                     }
@@ -303,8 +310,9 @@ public class MeetUpListActivity extends Activity {
                             } else if (index == 3) {
                                 //String = showListMeetUpPeople      (회원 ID, 회원 이름 ) --> 리스트뷰로 알려줌
                                 Intent intent = new Intent(MeetUpListActivity.this,ShowListMeetUpPeople.class);
-                                intent.putExtra("MeetName", MeetName);
-                                intent.putExtra("OrnerID", OrderID);
+                                intent.putExtra("meetName", MeetName);
+                                intent.putExtra("ornerID", OrderID);
+                                intent.putExtra("authority","0");
                                 startActivityForResult(intent, 1);
 
                             } else if (index == 4) {                            //gotochatting
