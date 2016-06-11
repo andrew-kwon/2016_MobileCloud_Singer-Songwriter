@@ -21,6 +21,9 @@ public class UploadMeetData {
     private static final String ADDMYMEETUP_URL = "http://52.207.214.66/meetUp/addMyParty.php";
     private static final String SHOWPEOPLE_URL = "http://52.207.214.66/meetUp/showListMeetUpPeople.php";
     private static final String ADDMEETUP_URL = "http://52.207.214.66/meetUp/addMeetUp.php";
+    private static final String UPDATETIME_URL = "http://52.207.214.66/meetUp/updateMeetTime.php";
+    private static final String UPDATEPLACE_URL = "http://52.207.214.66/meetUp/updateMeetPlace.php";
+
     String FUNCTION_URL;
     String returnString="";
     boolean returnBoolean;
@@ -39,6 +42,27 @@ public class UploadMeetData {
         sendTODB(context, urlSuffix);
     }
 
+    public void updateLocation(Context context,String meetName, String ornerID, String latitude, String longitude, String placeName)
+    {
+        Toast.makeText(context,latitude+":"+longitude,Toast.LENGTH_LONG).show();
+        placeName=placeName.replaceAll("\\s","_");
+        String urlSuffix = "?meetName="+meetName+"&ornerID="+ornerID+"&latitude="+latitude+"&longitude="+longitude+"&placeName="+placeName;
+        FUNCTION_URL=UPDATEPLACE_URL;
+        functionNum=2;
+        sendTODB(context,urlSuffix);
+
+    }
+
+    public void updateTime(Context context,String meetName, String ornerID ,String meetDate, String meetTime)
+    {
+
+        Toast.makeText(context,meetDate+"."+meetTime,Toast.LENGTH_LONG).show();
+        String urlSuffix = "?meetName="+meetName+"&ornerID="+ornerID+"&meetDate="+meetDate+"&meetTime="+meetTime;
+        FUNCTION_URL=UPDATETIME_URL;
+        functionNum=2;
+        sendTODB(context, urlSuffix);
+
+    }
 
     public String showListMeetUpPeople(Context context, String MeetName, String OrnerID) {
 
@@ -88,6 +112,7 @@ public class UploadMeetData {
                 }
                 if(functionNum==2)
                 {
+                    Toast.makeText(mycontext,s,Toast.LENGTH_LONG).show();
 
                 }
             }
