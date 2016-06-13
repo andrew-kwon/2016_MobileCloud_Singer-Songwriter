@@ -150,7 +150,10 @@ public class DownloadActivity extends ListActivity {
                         return true;
                     case R.id.textFileName:
                         TextView fileName = (TextView) view;
-                        fileName.setText((String) data);
+                        String getData = (String)data;
+                        String fileNameStr = getData.split("/")[5];
+
+                        fileName.setText(fileNameStr);
                         return true;
                     case R.id.progressBar1:
                         ProgressBar progress = (ProgressBar) view;
@@ -344,6 +347,10 @@ public class DownloadActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
             if (resultCode == RESULT_OK) {
+            }
+        else if(resultCode==2)
+            {
+
             }
 //        if (requestCode == DOWNLOAD_SELECTION_REQUEST_CODE) {
 //            if (resultCode == RESULT_OK) {

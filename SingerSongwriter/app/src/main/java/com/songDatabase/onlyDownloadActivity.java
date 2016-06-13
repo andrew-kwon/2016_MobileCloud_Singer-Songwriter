@@ -160,7 +160,12 @@ public class onlyDownloadActivity extends ListActivity {
                         return true;
                     case R.id.textFileName:
                         TextView fileName = (TextView) view;
-                        fileName.setText((String) data);
+
+                        String getData = (String)data;
+                        String fileNameStr = getData.split("/")[5];
+
+                        fileName.setText(fileNameStr);
+
                         return true;
                     case R.id.progressBar1:
                         ProgressBar progress = (ProgressBar) view;

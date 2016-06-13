@@ -31,6 +31,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.musicUtil.MusicPlayerActivity;
 import com.mysampleapp.R;
 import com.mysampleapp.Util;
 
@@ -61,6 +62,7 @@ public class UploadActivity extends ListActivity {
     private Button btnDelete;
     private Button btnPauseAll;
     private Button btnCancelAll;
+    private Button btnPlay;
 
     // The TransferUtility is the primary class for managing transfer to S3
     private TransferUtility transferUtility;
@@ -177,7 +179,10 @@ public class UploadActivity extends ListActivity {
                         return true;
                     case R.id.textFileName:
                         TextView fileName = (TextView) view;
-                        fileName.setText((String) data);
+                        String getData = (String)data;
+                        String fileNameStr = getData.split("/")[5];
+
+                        fileName.setText(fileNameStr);
                         return true;
                     case R.id.progressBar1:
                         ProgressBar progress = (ProgressBar) view;
@@ -220,12 +225,39 @@ public class UploadActivity extends ListActivity {
 
 //        btnUploadFile = (Button) findViewById(R.id.buttonUploadFile);
 //        btnUploadImage = (Button) findViewById(R.id.buttonUploadImage);
-        btnPause = (Button) findViewById(R.id.buttonPause);
-        btnResume = (Button) findViewById(R.id.buttonResume);
-        btnCancel = (Button) findViewById(R.id.buttonCancel);
+//        btnPause = (Button) findViewById(R.id.buttonPause);
+//        btnResume = (Button) findViewById(R.id.buttonResume);
+//        btnCancel = (Button) findViewById(R.id.buttonCancel);
         btnDelete = (Button) findViewById(R.id.buttonDelete);
-        btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
-        btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
+//        btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
+//        btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
+
+
+        btnPlay = (Button) findViewById(R.id.button_upload_play);
+        btnPlay.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+
+                    Object nowData = simpleAdapter.getItem(checkedIndex);
+                    String myData=nowData.toString();
+                    String myDataSet[] = myData.split(",");
+                    String fileNameSet[] = myDataSet[2].split("=");
+                    String fileName=fileNameSet[1];                                  // 현재 선택한  object 에서 file name 가져오기
+
+                    Intent intent = new Intent(UploadActivity.this, MusicPlayerActivity.class);
+                    intent.putExtra("pos",  fileName);
+                    Toast.makeText(
+                            UploadActivity.this,
+                            "pos : " +  fileName ,
+                            Toast.LENGTH_SHORT).show();
+                    startActivityForResult(intent, 1);
+                }
+
+            }
+        });
+
 //
 //        btnUploadFile.setOnClickListener(new OnClickListener() {
 //            @Override
@@ -268,73 +300,73 @@ public class UploadActivity extends ListActivity {
 //                startActivityForResult(intent, 0);
 //            }
 //        });
-
-        btnPause.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Make sure the user has selected a transfer
-                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-                    Boolean paused = transferUtility.pause(observers.get(checkedIndex).getId());
-                    /**
-                     * If paused does not return true, it is likely because the
-                     * user is trying to pause an upload that is not in a
-                     * pausable state (For instance it is already paused, or
-                     * canceled).
-                     */
-                    if (!paused) {
-                        Toast.makeText(
-                                UploadActivity.this,
-                                "Cannot pause transfer.  You can only pause transfers in a IN_PROGRESS or WAITING state.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        btnResume.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Make sure the user has selected a transfer
-                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-                    TransferObserver resumed = transferUtility.resume(observers.get(checkedIndex)
-                            .getId());
-                    // Sets a new transfer listener to the original observer.
-                    // This will overwrite existing listener.
-                    observers.get(checkedIndex).setTransferListener(new UploadListener());
-                    /**
-                     * If resume returns null, it is likely because the transfer
-                     * is not in a resumable state (For instance it is already
-                     * running).
-                     */
-                    if (resumed == null) {
-                        Toast.makeText(
-                                UploadActivity.this,
-                                "Cannot resume transfer.  You can only resume transfers in a PAUSED state.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        btnCancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Make sure a transfer is selected
-                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-                    Boolean canceled = transferUtility.cancel(observers.get(checkedIndex).getId());
-                    /**
-                     * If cancel returns false, it is likely because the
-                     * transfer is already canceled
-                     */
-                    if (!canceled) {
-                        Toast.makeText(
-                                UploadActivity.this,
-                                "Cannot cancel transfer.  You can only resume transfers in a PAUSED, WAITING, or IN_PROGRESS state.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
+//
+//        btnPause.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Make sure the user has selected a transfer
+//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+//                    Boolean paused = transferUtility.pause(observers.get(checkedIndex).getId());
+//                    /**
+//                     * If paused does not return true, it is likely because the
+//                     * user is trying to pause an upload that is not in a
+//                     * pausable state (For instance it is already paused, or
+//                     * canceled).
+//                     */
+//                    if (!paused) {
+//                        Toast.makeText(
+//                                UploadActivity.this,
+//                                "Cannot pause transfer.  You can only pause transfers in a IN_PROGRESS or WAITING state.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//
+//        btnResume.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Make sure the user has selected a transfer
+//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+//                    TransferObserver resumed = transferUtility.resume(observers.get(checkedIndex)
+//                            .getId());
+//                    // Sets a new transfer listener to the original observer.
+//                    // This will overwrite existing listener.
+//                    observers.get(checkedIndex).setTransferListener(new UploadListener());
+//                    /**
+//                     * If resume returns null, it is likely because the transfer
+//                     * is not in a resumable state (For instance it is already
+//                     * running).
+//                     */
+//                    if (resumed == null) {
+//                        Toast.makeText(
+//                                UploadActivity.this,
+//                                "Cannot resume transfer.  You can only resume transfers in a PAUSED state.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//
+//        btnCancel.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Make sure a transfer is selected
+//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+//                    Boolean canceled = transferUtility.cancel(observers.get(checkedIndex).getId());
+//                    /**
+//                     * If cancel returns false, it is likely because the
+//                     * transfer is already canceled
+//                     */
+//                    if (!canceled) {
+//                        Toast.makeText(
+//                                UploadActivity.this,
+//                                "Cannot cancel transfer.  You can only resume transfers in a PAUSED, WAITING, or IN_PROGRESS state.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
 
         btnDelete.setOnClickListener(new OnClickListener() {
             @Override
@@ -350,20 +382,20 @@ public class UploadActivity extends ListActivity {
                 }
             }
         });
-
-        btnPauseAll.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                transferUtility.pauseAllWithType(TransferType.UPLOAD);
-            }
-        });
-
-        btnCancelAll.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                transferUtility.cancelAllWithType(TransferType.UPLOAD);
-            }
-        });
+//
+//        btnPauseAll.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                transferUtility.pauseAllWithType(TransferType.UPLOAD);
+//            }
+//        });
+//
+//        btnCancelAll.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                transferUtility.cancelAllWithType(TransferType.UPLOAD);
+//            }
+//        });
 
         updateButtonAvailability();
     }
@@ -388,9 +420,9 @@ public class UploadActivity extends ListActivity {
      */
     private void updateButtonAvailability() {
         boolean availability = checkedIndex >= 0;
-        btnPause.setEnabled(availability);
-        btnResume.setEnabled(availability);
-        btnCancel.setEnabled(availability);
+//        btnPause.setEnabled(availability);
+//        btnResume.setEnabled(availability);
+//        btnCancel.setEnabled(availability);
         btnDelete.setEnabled(availability);
     }
 

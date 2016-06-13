@@ -116,9 +116,9 @@ public class MusicPlayerActivity extends Activity {
     @Override
     public void onBackPressed()
     {
-        Intent backtoDown = new Intent();
-        setResult(RESULT_OK, backtoDown);
         mp.stop();
+        Intent backtoDown = new Intent();
+        setResult(3, backtoDown);
         finish();
 
     }
