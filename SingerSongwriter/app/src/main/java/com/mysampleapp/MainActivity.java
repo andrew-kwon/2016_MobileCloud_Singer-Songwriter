@@ -460,10 +460,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public static void setUserID(String ID) { UserID= ID;}
         public static String getUserID() {return UserID;}
 
-        public static void setContents(String content) { contents= content.replaceAll("\\s","　");;}
+        public static void setContents(String content) { contents= content.replaceAll("\\s","-");;}
         public static String getContents() {return contents;}
 
-        public static void setSongName(String songName) { SongName= songName.replaceAll("\\s","　");;}
+        public static void setSongName(String songName) { SongName= songName.replaceAll("\\s","-");;}
         public static String getSongName() {return SongName;}
 
         public static void setUploadFilepath(String filepath) { UploadFilepath = filepath.replaceAll("\\s","-");;}

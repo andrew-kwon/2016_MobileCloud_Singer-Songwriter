@@ -29,7 +29,7 @@ import com.mysampleapp.R;
 public class setMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     static Context myContext;
-    private TextView locationText;
+//    private TextView locationText;
     private Button addLocation;
     private GoogleMap mMap;
     LocationManager myLocationManager;
@@ -50,7 +50,7 @@ public class setMapsActivity extends FragmentActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
         myContext=getApplicationContext();
         myGPS= new GPSClass();
-        locationText = (TextView) findViewById(R.id.location);
+//        locationText = (TextView) findViewById(R.id.location);
         addLocation = (Button) findViewById(R.id.addLocation);
 
         if (ContextCompat.checkSelfPermission(setMapsActivity.this,
@@ -153,7 +153,7 @@ public class setMapsActivity extends FragmentActivity implements OnMapReadyCallb
 //        Log.i("Message: ","Location changed, " + location.getAccuracy() + " , " + location.getLatitude()+ "," + location.getLongitude());
             currentLatitude=location.getLatitude();
             currentLongtitude = location.getLongitude();
-            locationText.setText(" " + currentLatitude + " : " + currentLongtitude);
+//            locationText.setText(" " + currentLatitude + " : " + currentLongtitude);
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {}

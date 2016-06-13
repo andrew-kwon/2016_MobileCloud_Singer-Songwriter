@@ -194,7 +194,7 @@ public class DownloadActivity extends ListActivity {
 //        btnPause = (Button) findViewById(R.id.buttonPause);
 //        btnResume = (Button) findViewById(R.id.buttonResume);
 //        btnCancel = (Button) findViewById(R.id.buttonCancel);
-//        btnDelete = (Button) findViewById(R.id.buttonDelete);
+        btnDelete = (Button) findViewById(R.id.buttonDelete);
 //        btnPauseAll = (Button) findViewById(R.id.buttonPauseAll);
 //        btnCancelAll = (Button) findViewById(R.id.buttonCancelAll);
 
@@ -306,22 +306,22 @@ public class DownloadActivity extends ListActivity {
 //                }
 //            }
 //        });
-//
-//        btnDelete.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Make sure a transfer is selected
-//                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
-//                    // Deletes a record but the file is not deleted.
-//                    transferUtility.deleteTransferRecord(observers.get(checkedIndex).getId());
-//                    observers.remove(checkedIndex);
-//                    transferRecordMaps.remove(checkedIndex);
-//                    checkedIndex = INDEX_NOT_CHECKED;
-//                    updateButtonAvailability();
-//                    updateList();
-//                }
-//            }
-//        });
+
+        btnDelete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Make sure a transfer is selected
+                if (checkedIndex >= 0 && checkedIndex < observers.size()) {
+                    // Deletes a record but the file is not deleted.
+                    transferUtility.deleteTransferRecord(observers.get(checkedIndex).getId());
+                    observers.remove(checkedIndex);
+                    transferRecordMaps.remove(checkedIndex);
+                    checkedIndex = INDEX_NOT_CHECKED;
+                    updateButtonAvailability();
+                    updateList();
+                }
+            }
+        });
 //
 //        btnPauseAll.setOnClickListener(new OnClickListener() {
 //            @Override
@@ -411,7 +411,7 @@ public class DownloadActivity extends ListActivity {
 //        btnPause.setEnabled(availability);
 //        btnResume.setEnabled(availability);
 //        btnCancel.setEnabled(availability);
-//        btnDelete.setEnabled(availability);
+        btnDelete.setEnabled(availability);
     }
 
     /*

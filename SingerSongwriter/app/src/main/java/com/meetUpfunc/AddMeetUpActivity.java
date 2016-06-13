@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,9 +13,13 @@ import android.os.Bundle;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +68,9 @@ public class AddMeetUpActivity extends Activity {
     String setContent="null";
     String setPlaceName="null";
     String ba1;
+
+    private static final String ADDMEETUP_URL = "http://52.207.214.66/meetUp/addMeetUp.php";
+    String FUNCTION_URL="";
 
     /** Called when the activity is first created. */
     @Override
@@ -180,9 +188,11 @@ public class AddMeetUpActivity extends Activity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                boolean returnAdd = myDB.addMeetUp(getApplicationContext(),setMeetName, setDate, setTime,
+
+                addMeetUpFunction(getApplicationContext(),setMeetName, setDate, setTime,
                         setPlaceName, setLatitude,setLongitude,setContent);
-                new uploadMeetImageToServer().execute();
+//                new uploadMeetImageToServer().execute();
+
 //
 //                Intent backtoComment = new Intent();
 //                setResult(RESULT_OK, backtoComment);
@@ -195,6 +205,17 @@ public class AddMeetUpActivity extends Activity {
     }
 
 
+    public void addMeetUpFunction(Context context,String setMeetName,String  setDate,String setTime,
+                                     String setPlaceName,String setLatitude,String setLongtitude,String setContent){
+
+        setPlaceName = setPlaceName.replaceAll("\\s","_");
+
+        String urlSuffix = "?MeetName="+setMeetName.trim()+"&OrnerID="+MainActivity.UserIDClass.getUserID()
+                +"&setDate="+setDate+"&setTime="+setTime+"&setPlaceName="+setPlaceName.trim()+"&setLatitude="+setLatitude+"&setLongtitude="+setLongtitude
+                +"&setContent="+setContent+"&OrnerName="+MainActivity.UserIDClass.getUserName()+"&myUserName="+MainActivity.UserIDClass.getUserName();
+        FUNCTION_URL=ADDMEETUP_URL;
+        addMeetUp(context, urlSuffix);
+    }
 
     private TimePickerDialog.OnTimeSetListener timelistener = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -327,5 +348,63 @@ public class AddMeetUpActivity extends Activity {
         }
     }
 
+
+
+
+    private void addMeetUp(Context context, String urlSuffix) {
+
+        final Context mycontext = context;
+
+        class RegisterUser extends AsyncTask<String, Void, String> {
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                if(s.equals("successfully Upload")) {
+                    Toast.makeText(mycontext,s,Toast.LENGTH_LONG).show();
+
+                    new uploadMeetImageToServer().execute();
+                    Intent backtoMenu = new Intent();
+                    setResult(RESULT_OK, backtoMenu);
+                    finish();
+                }
+                else
+                {
+                    Toast.makeText(mycontext,s,Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+                String s = params[0];
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(FUNCTION_URL+s);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String result;
+
+                    result = bufferedReader.readLine();
+
+                    return result;
+                }catch(Exception e){
+                    return null;
+                }
+            }
+        }
+
+        RegisterUser ru = new RegisterUser();
+        ru.execute(urlSuffix);
+    }
 
 }

@@ -159,8 +159,10 @@ public class RecordActivity extends Activity {
                 alert.setTitle("곡 제목");
                 alert.setMessage("곡 제목을 입력하세요.");
                 String userName = MainActivity.UserIDClass.getUserName();
+                String userID = MainActivity.UserIDClass.getUserID();
 
-                final String myUser = userName;
+                final String myUserName = userName;
+                final String myUserID = userID;
 
                 // Set an EditText view to get user input
                 final EditText input = new EditText(RecordActivity.this);
@@ -168,6 +170,7 @@ public class RecordActivity extends Activity {
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
+                        value=value.replaceAll("\\s","-");
                         if(value.equals(""))
                         {
                             Toast.makeText(getApplicationContext(),"곡 제목을 입력하세요.",Toast.LENGTH_SHORT).show();
@@ -175,9 +178,9 @@ public class RecordActivity extends Activity {
                         else {
                             MainActivity.UserIDClass.setSongName(value.toString());
                             File filePre = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/recorded.mp4");
-                            File fileNow = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4");
+                            File fileNow = new File(Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" +myUserName+"_" + value+ ".mp4");
                             filePre.renameTo(fileNow);    //이름바꾸기
-                            String Change_file = Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUser + "_" + value.toString() + ".mp4";   //경로설정
+                            String Change_file = Environment.getExternalStorageDirectory().getPath() + "/SingerSongwriter/" + myUserName+"_" +  value + ".mp4";   //경로설정
                             MainActivity.UserIDClass.setUploadFilepath(Change_file);                                  //올릴 페스 글로벌로 저장.
                             setText();
                         }

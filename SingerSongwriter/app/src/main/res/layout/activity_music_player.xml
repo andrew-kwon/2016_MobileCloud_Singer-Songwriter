@@ -58,15 +58,15 @@
         android:id="@+id/button3"
         android:text="일시정지"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:width="180dp"
-        android:layout_gravity="center"
-        android:id="@+id/button4"
-        android:background="#FFAA00"
-        android:text="댓글보기"/>
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:width="180dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:id="@+id/button4"-->
+        <!--android:background="#FFAA00"-->
+        <!--android:text="댓글보기"/>-->
 
 
 </LinearLayout>
