@@ -14,5 +14,35 @@
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
         android:scrollbars="vertical"
-        />
+        android:layout_above="@+id/playbar_like" />
+
+
+    <SeekBar
+        android:id="@+id/playbar_like"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:max="60000"
+        android:padding="10dp"
+        android:progress="10"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:id="@+id/text1_like"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#ff9d00"
+        android:text="00:00"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="160dp"
+        android:layout_marginBottom="10dp"/>
+
+
 </RelativeLayout>

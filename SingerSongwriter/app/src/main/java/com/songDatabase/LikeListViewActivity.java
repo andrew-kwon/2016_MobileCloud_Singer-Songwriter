@@ -6,20 +6,28 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.RecyclerUtil.SongRecyclerAdapter;
 import com.RecyclerUtil.RecyclerItemClickListener;
 import com.mysampleapp.MainActivity;
 import com.mysampleapp.R;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +48,16 @@ public class LikeListViewActivity extends Activity  {
     RecyclerView recyclerView;
     static String LIKEURL="http://52.207.214.66/singersong/changeLike.php";
 
+
+    MediaPlayer mp;
+    SeekBar seekBar;
+    TextView text;
+
     public static Context getLikeListContect()
     {
         return likeListContext;
     }
+
 
 
     @Override
@@ -75,7 +89,24 @@ public class LikeListViewActivity extends Activity  {
         }));
 
 
+        mp = new MediaPlayer();
+
+        seekBar = (SeekBar)findViewById(R.id.playbar_like);
+        text=(TextView)findViewById(R.id.text1_like);
+        seekBar.setVisibility(ProgressBar.VISIBLE);
+
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent backtoComment = new Intent();
+        setResult(RESULT_OK, backtoComment);
+        mp.stop();
+        mp.seekTo(0);
+        finish();
+    }
+
 
 
     public void setListView(String songList) {
@@ -127,31 +158,109 @@ public class LikeListViewActivity extends Activity  {
         final String UserID = listUserID[position];
         final int likeCounts = likeCount[position];
         final int commentcount = commentCount[position];
-        final CharSequence[] items = {"다운받기", "좋아요" + " (" + likeCounts + ")", "댓글보기"+" ("+commentcount+")" ,"취소"};
+        final CharSequence[] items = {"바로듣기", "다운받기", "좋아요" + " (" + likeCounts + ")", "댓글보기" + " (" + commentcount + ")", "취소"};
 
         alert.setTitle(SongName + " : " + contents[position])
                 .setItems(items, new DialogInterface.OnClickListener() {                               ///메뉴선택별 기능 추가
                     public void onClick(DialogInterface dialog, int index) {
-                        if (index == 0) {
+                        if (index==0)
+                        {
+
+                            mp.stop();
+                            mp.seekTo(0);
+                            try {
+                                startSongStream(SongName, UserID, UserName);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else if (index == 1) {
                             Intent intent = new Intent(LikeListViewActivity.this, onlyDownloadActivity.class);
                             intent.putExtra("key", UserName + "_" + SongName + ".mp4");
                             startActivity(intent);
-                        } else if (index == 1) {                                                              //좋아요
+                        } else if (index == 2) {                                                              //좋아요
                             UploadDatabaseManager myLikeDB = new UploadDatabaseManager();
                             myLikeDB.upLikeCount(getApplicationContext(), SongName, UserID);
 //                                    if(MainActivity.UserIDClass.getLikeTrue()) setList(); // 좋아요 성공하면 최신화
                             setList();
 
-                        } else if (index == 2) {                                                           //댓글보기
+                        } else if (index == 3) {                                                           //댓글보기
                             // dbContents intent 해서 보여주기. 여기서는 userName,userID, songName 일치하는 댓글 보여주기 ........... 만약 곡 이름이 같다면 업로드 못하게 설정.
                             showComment(UserID, SongName);
-                        } else if (index == 3) {                                                            //취소
+                        } else if (index == 4) {                                                            //취소
                             // 아무것도 하지 않음
                         }
                     }});
         alert.show();
 
     }
+
+
+    private void startSongStream(String SongName, String UserID, String UserName) throws UnsupportedEncodingException {
+
+        try {
+            SongName= URLEncoder.encode(SongName, "UTF-8");
+            UserName=URLEncoder.encode(UserName,"UTF-8");
+            Log.v("AUDIOHTTPPLAYER", "https://s3.amazonaws.com/mysongs3/" + UserName + "_" + SongName + ".mp4");
+            mp.setDataSource("https://s3.amazonaws.com/mysongs3/" + UserName + "_" + SongName + ".mp4");
+            mp.prepare();
+
+            seekBar.setMax(mp.getDuration());
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser) {
+                        mp.seekTo(progress);
+                    }
+                    int m = progress / 60000;
+                    int s = (progress % 60000) / 1000;
+                    String strTime = String.format("%02d:%02d", m, s);
+                    text.setText(strTime);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+            mp.start();
+            Thread();
+        } catch (IOException e) {
+            Log.v("AUDIOHTTPPLAYER", e.getMessage());
+        }
+    }
+
+
+    public void Thread(){
+        Runnable task = new Runnable(){
+
+
+            public void run(){
+                // 음악이 재생중일때
+                while(mp.isPlaying()){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    seekBar.setProgress(mp.getCurrentPosition());
+                }
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+    }
+
+
+
+
     private void showComment(String UserID, String SongName)
     {
         Intent intent = new Intent(LikeListViewActivity.this,ShowCommentActivity.class);

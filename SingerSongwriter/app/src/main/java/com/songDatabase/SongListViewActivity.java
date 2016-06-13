@@ -14,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -62,6 +65,10 @@ public class SongListViewActivity extends Activity  {
     SongRecyclerAdapter adapter;
     RecyclerView recyclerView;
 
+    MediaPlayer mp;
+    SeekBar seekBar;
+    TextView text;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +92,7 @@ public class SongListViewActivity extends Activity  {
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position)
-            {
+            public void onItemClick(View view, int position) {
                 alertShow(position);
             }
 
@@ -97,7 +103,24 @@ public class SongListViewActivity extends Activity  {
         }));
         // 아이템을 [클릭]시의 이벤트 리스너를 등록
 
+        mp = new MediaPlayer();
 
+        seekBar = (SeekBar)findViewById(R.id.playbar_song);
+        text=(TextView)findViewById(R.id.text1_song);
+        seekBar.setVisibility(ProgressBar.VISIBLE);
+
+
+    }
+
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent backtoComment = new Intent();
+        setResult(RESULT_OK, backtoComment);
+        mp.stop();
+        mp.seekTo(0);
+        finish();
     }
 
 
@@ -178,6 +201,8 @@ public class SongListViewActivity extends Activity  {
                     public void onClick(DialogInterface dialog, int index) {
                         if (index==0)
                         {
+                            mp.stop();
+                            mp.seekTo(0);
                             try {
                                 startSongStream(SongName, UserID, UserName);
                             } catch (UnsupportedEncodingException e) {
@@ -208,19 +233,69 @@ public class SongListViewActivity extends Activity  {
 
     }
     private void startSongStream(String SongName, String UserID, String UserName) throws UnsupportedEncodingException {
-        MediaPlayer mediaPlayer;
-        mediaPlayer = new MediaPlayer();
+
         try {
             SongName=URLEncoder.encode(SongName,"UTF-8");
             UserName=URLEncoder.encode(UserName,"UTF-8");
             Log.v("AUDIOHTTPPLAYER", "https://s3.amazonaws.com/mysongs3/"+UserName+"_"+SongName+".mp4");
-            mediaPlayer.setDataSource("https://s3.amazonaws.com/mysongs3/"+UserName+"_"+SongName+".mp4");
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            mp.setDataSource("https://s3.amazonaws.com/mysongs3/"+UserName+"_"+SongName+".mp4");
+            mp.prepare();
+
+            seekBar.setMax(mp.getDuration());
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser) {
+                        mp.seekTo(progress);
+                    }
+                    int m = progress / 60000;
+                    int s = (progress % 60000) / 1000;
+                    String strTime = String.format("%02d:%02d", m, s);
+                    text.setText(strTime);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+            mp.start();
+            Thread();
+
         } catch (IOException e) {
             Log.v("AUDIOHTTPPLAYER", e.getMessage());
         }
     }
+
+
+    public void Thread(){
+        Runnable task = new Runnable(){
+
+
+            public void run(){
+                // 음악이 재생중일때
+                while(mp.isPlaying()){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    seekBar.setProgress(mp.getCurrentPosition());
+                }
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+    }
+
+
+
     private void setList() {
 
         class LoginAsync extends AsyncTask<String, Void, String>{

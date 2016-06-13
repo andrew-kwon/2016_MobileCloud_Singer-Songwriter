@@ -265,7 +265,7 @@ public class AddMeetUpActivity extends Activity {
 
 
                 ba1 = BitMapToString(resized);
-                Log.e("base64", "-----" + ba1);
+//                Log.e("base64", "-----" + ba1);
                 // Upload image to server
             } catch (IOException e) {
                 // TODO Auto-generated catch block

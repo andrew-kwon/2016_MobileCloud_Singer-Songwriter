@@ -14,5 +14,32 @@
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
         android:scrollbars="vertical"
-        />
+        android:layout_above="@+id/playbar_song" />
+
+
+    <SeekBar
+        android:id="@+id/playbar_song"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:max="60000"
+        android:padding="10dp"
+        android:progress="10"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:id="@+id/text1_song"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#ff9d00"
+        android:text="00:00"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginBottom="10dp"/>
+
 </RelativeLayout>
