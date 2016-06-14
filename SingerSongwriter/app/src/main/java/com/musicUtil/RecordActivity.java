@@ -67,11 +67,12 @@ public class RecordActivity extends Activity {
 
                 cnt++;
                 String time = new Integer(cnt).toString();
-                long millis = cnt;
-                int seconds = (int) (millis / 60);
-                int minutes = seconds / 60;
+                long seconds = cnt;
+                int minutes = (cnt / 60);
+                int hours = cnt / 60/60;
                 seconds = seconds % 60;
-                txtcount.setText(String.format("%d:%02d:%02d", minutes, seconds, millis));
+                minutes= minutes%60;
+                txtcount.setText(String.format("%d:%02d:%02d", hours, minutes, seconds));
 
             }
 

@@ -306,11 +306,11 @@ public class AddMeetUpActivity extends Activity {
     }
     public final class uploadMeetImageToServer extends AsyncTask<Void, Void, String> {
 
-        private ProgressDialog pd = new ProgressDialog(AddMeetUpActivity.this);
+//        private ProgressDialog pd = new ProgressDialog(AddMeetUpActivity.this);
         protected void onPreExecute() {
             super.onPreExecute();
-            pd.setMessage("Wait image uploading!");
-            pd.show();
+//            pd.setMessage("Wait image uploading!");
+//            pd.show();
         }
 
         @Override
@@ -343,8 +343,8 @@ public class AddMeetUpActivity extends Activity {
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            pd.hide();
-            pd.dismiss();
+//            pd.hide();
+//            pd.dismiss();
         }
     }
 
